@@ -48,8 +48,10 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       backgroundColor: Color(0xFFBACEE0),
       appBar: AppBar(
-        title: Text("플접관"),
+        title: Text("Flutter/Dart"),
         backgroundColor: Color(0xFFBACEE0),
+        surfaceTintColor: Color(0xFFBACEE0),
+        titleSpacing: 0,
       ),
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(), // 화면을 탭하면 키보드를 닫음

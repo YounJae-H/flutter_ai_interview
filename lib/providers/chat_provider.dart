@@ -5,16 +5,17 @@ import 'package:flutter_interview/services/openai_service.dart';
 class ChatProvider with ChangeNotifier {
   final List<ChatMessage> _messages = [];
   final OpenAIService _openAIService = OpenAIService();
-  late int _qCount;
+  int _questionCount = 0;
+  List<String> _difficulty = ['최하', '하', '중', '상', '최상'];
+  String _selectedDifficulty = '중';
   bool _isTyping = false;
 
-  int get qCount => _qCount;
+  int get questionCount => _questionCount;
+  List<String> get difficulty => _difficulty;
+  String get selectedDifficulty => _selectedDifficulty;
+
   List<ChatMessage> get messages => _messages;
   bool get isTyping => _isTyping;
-
-  ChatProvider() {
-    _qCount = 4;
-  }
 
   Future<void> sendMessage(String message) async {
     if (_isTyping) return;
@@ -53,6 +54,23 @@ class ChatProvider with ChangeNotifier {
 
   void _setTypingState(bool isTyping) {
     _isTyping = isTyping;
+    notifyListeners();
+  }
+
+  void updateQuestionCount(int newValue) {
+    _questionCount = newValue;
+    notifyListeners();
+  }
+
+  void updateQuestionDifficulty(String newValue) {
+    _selectedDifficulty = newValue;
+    notifyListeners();
+  }
+
+  void endInterview() {
+    // 대화 종료: messages 리스트를 초기화하여 이전 대화 내역 삭제 (화면에 표시하는 대회 내역 삭제)
+    _messages.clear(); // 화면 표시 대화 내역 삭제
+    _openAIService.endConversation(); //OpenAI 기존 맥락 파괴 후 초기화
     notifyListeners();
   }
 }

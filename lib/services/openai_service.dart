@@ -66,12 +66,17 @@ class OpenAIService {
   }
 
   void endConversation() {
-    // 대화 종료: messages 리스트를 초기화하여 이전 대화 내역 삭제
-    messages = [];
+    // 대화 종료: messages 리스트를 초기화하여 이전 대화 내역 삭제 (AI 맥락 파괴)
+    messages.clear();
     // 종료 메시지를 원한다면 아래 내용을 추가
     messages.add({
       'role': 'system',
-      'content': '대화가 종료되었습니다. 새로운 대화를 시작하려면 메시지를 입력하세요.',
+      'content': Env.prompt,
+    });
+
+    messages.add({
+      'role': 'user',
+      'content': Env.userPrompt,
     });
   }
 }
