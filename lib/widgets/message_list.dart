@@ -25,7 +25,11 @@ class BuildMessageList extends StatelessWidget {
             if (index == 0 && message.isUser) {
               return Container();
             }
-            return BuildMessageItem(message: message);
+
+            return BuildMessageItem(
+              message: message,
+              index: index,
+            );
           },
         );
       },

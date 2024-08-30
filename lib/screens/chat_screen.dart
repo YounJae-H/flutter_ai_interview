@@ -56,6 +56,7 @@ class _ChatScreenState extends State<ChatScreen> {
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(), // 화면을 탭하면 키보드를 닫음
         child: SafeArea(
+          // 텍스트 필드 높이가 변할 때 값을 전달하기 위함 / 높이 만큼 패딩을 추가하여 화면 가림을 방지
           child: Consumer<KeyboardProvider>(
             builder: (BuildContext context, value, Widget? child) {
               return Column(
@@ -89,8 +90,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _handleSendPressed() {
     if (_controller.text.isNotEmpty) {
-      Provider.of<ChatProvider>(context, listen: false)
-          .sendMessage(_controller.text);
+      context.read<ChatProvider>().sendMessage(_controller.text);
       _controller.clear();
       _isSendButtonEnabled.value = true;
     }

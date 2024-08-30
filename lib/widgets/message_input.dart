@@ -19,7 +19,7 @@ class BuildMessageInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isTyping = Provider.of<ChatProvider>(context).isTyping;
+    final bool isTyping = context.watch<ChatProvider>().isTyping;
     final containerHeight = MediaQuery.of(context).size.height / 15;
     final keyboardHeight =
         Provider.of<KeyboardProvider>(context).keyboardHeight;

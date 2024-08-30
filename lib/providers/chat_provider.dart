@@ -5,10 +5,11 @@ import 'package:flutter_interview/services/openai_service.dart';
 class ChatProvider with ChangeNotifier {
   final List<ChatMessage> _messages = [];
   final OpenAIService _openAIService = OpenAIService();
-  int _questionCount = 0;
-  List<String> _difficulty = ['최하', '하', '중', '상', '최상'];
+  final List<String> _difficulty = ['최하', '하', '중', '상', '최상'];
   String _selectedDifficulty = '중';
+  int _questionCount = 0;
   bool _isTyping = false;
+  bool _isLoading = false;
 
   int get questionCount => _questionCount;
   List<String> get difficulty => _difficulty;
@@ -16,14 +17,17 @@ class ChatProvider with ChangeNotifier {
 
   List<ChatMessage> get messages => _messages;
   bool get isTyping => _isTyping;
+  bool get isLoading => _isLoading;
 
   Future<void> sendMessage(String message) async {
     if (_isTyping) return;
 
     _addMessage(message, isUser: true);
     _setTypingState(true);
+    _setLoadingState(true);
 
     String response = await _openAIService.createModel(message);
+    _setLoadingState(false);
     await _displayAssistantMessage(response);
 
     _setTypingState(false);
@@ -54,6 +58,11 @@ class ChatProvider with ChangeNotifier {
 
   void _setTypingState(bool isTyping) {
     _isTyping = isTyping;
+    notifyListeners();
+  }
+
+  void _setLoadingState(bool isLoading) {
+    _isLoading = isLoading;
     notifyListeners();
   }
 
