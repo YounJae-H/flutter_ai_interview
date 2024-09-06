@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_interview/providers/bottom_navigation_provider.dart';
 import 'package:flutter_interview/providers/chat_provider.dart';
 import 'package:flutter_interview/providers/keyboard_provider.dart';
+import 'package:flutter_interview/providers/scroll_controller_provider.dart';
 import 'package:flutter_interview/route/router.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +21,7 @@ class _App extends StatelessWidget {
         providers: [
           ChangeNotifierProvider(create: (_) => ChatProvider()),
           ChangeNotifierProvider(create: (_) => KeyboardProvider()),
+          ChangeNotifierProvider(create: (_) => ScrollControllerProvider()),
           ChangeNotifierProvider(create: (_) => BottomNavigationProvider()),
         ],
         child: MaterialApp.router(

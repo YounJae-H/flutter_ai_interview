@@ -1,16 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_interview/providers/chat_provider.dart';
+import 'package:flutter_interview/providers/scroll_controller_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class QuestionCountScreen extends StatelessWidget {
-  final FixedExtentScrollController fixedExtentScrollController;
-  const QuestionCountScreen(
-      {super.key, required this.fixedExtentScrollController});
+  const QuestionCountScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final scrollController =
+        context.watch<ScrollControllerProvider>().scrollController;
     // final chatProvider = context.read<ChatProvider>();
     // final _difficulty = chatProvider.difficulty;
     // String _selectedDifficulty = chatProvider.selectedDifficulty; 난이도 관련
@@ -37,7 +40,7 @@ class QuestionCountScreen extends StatelessWidget {
               ),
               Expanded(
                 child: CupertinoPicker(
-                    scrollController: fixedExtentScrollController,
+                    scrollController: scrollController,
                     itemExtent: 40.0,
                     onSelectedItemChanged: (index) {
                       context

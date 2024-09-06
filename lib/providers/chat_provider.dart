@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_interview/models/chat_message.dart';
 import 'package:flutter_interview/services/openai_service.dart';
-import 'package:go_router/go_router.dart';
 
 class ChatProvider with ChangeNotifier {
   final List<ChatMessage> _messages = [];
