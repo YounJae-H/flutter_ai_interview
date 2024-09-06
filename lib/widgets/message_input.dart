@@ -68,19 +68,24 @@ class BuildMessageInput extends StatelessWidget {
               ValueListenableBuilder<bool>(
                 valueListenable: isSendButtonEnabled,
                 builder: (BuildContext context, bool isEnabled, Widget? child) {
+                  final isBoolean = isTyping || isEnabled;
                   return SizedBox(
                     height: containerHeight,
                     width: containerHeight,
                     child: IconButton(
                       icon: const Icon(Icons.send),
-                      style: IconButton.styleFrom(
-                        backgroundColor: Colors.yellow,
-                        iconSize: 35.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0),
-                        ),
-                      ),
-                      onPressed: isTyping || isEnabled ? null : onPressed,
+                      iconSize: 35.0,
+                      color: Colors.grey,
+                      style: isBoolean
+                          ? null
+                          : IconButton.styleFrom(
+                              foregroundColor: Colors.black,
+                              backgroundColor: Colors.yellow,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(0),
+                              ),
+                            ),
+                      onPressed: isBoolean ? () {} : onPressed,
                     ),
                   );
                 },

@@ -57,7 +57,7 @@ class _ChatScreenState extends State<ChatScreen> {
       child: Scaffold(
         backgroundColor: Color(0xFFBACEE0),
         appBar: AppBar(
-          title: Text("Flutter/Dart"),
+          title: const Text("Flutter/Dart"),
           backgroundColor: Color(0xFFBACEE0),
           surfaceTintColor: Color(0xFFBACEE0),
           titleSpacing: 0,
