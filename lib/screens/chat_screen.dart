@@ -3,6 +3,7 @@ import 'package:flutter_interview/providers/chat_provider.dart';
 import 'package:flutter_interview/providers/keyboard_provider.dart';
 import 'package:flutter_interview/widgets/message_input.dart';
 import 'package:flutter_interview/widgets/message_list.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -47,6 +48,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     final isFirstLoading = context.watch<ChatProvider>().isFirstMessage;
     final isTyping = context.read<ChatProvider>().isTyping;
+    final isEnded = context.watch<ChatProvider>().isInterviewEnded;
     return PopScope(
       canPop: isTyping ? false : true, // ai 응답이 오는 중이라면 뒤로가기 비활성화
       onPopInvoked: (bool didPop) {
@@ -71,12 +73,34 @@ class _ChatScreenState extends State<ChatScreen> {
                 return Column(
                   children: [
                     Expanded(
-                        child: isFirstLoading // ai의 첫 응답이 올때까지 대기
-                            ? const Center(child: CircularProgressIndicator())
-                            : BuildMessageList(
-                                scrollController: _scrollController,
-                                scrollToBottom: _scrollToBottom,
-                              )),
+                      child: Stack(
+                        children: [
+                          isFirstLoading // ai의 첫 응답이 올때까지 대기
+                              ? const Center(child: CircularProgressIndicator())
+                              : BuildMessageList(
+                                  scrollController: _scrollController,
+                                  scrollToBottom: _scrollToBottom,
+                                ),
+                          isEnded
+                              ? Center(
+                                  child: Container(
+                                    width: 300,
+                                    height: 300,
+                                    color: Colors.black,
+                                    child: ElevatedButton(
+                                        onPressed: () {
+                                          context
+                                              .read<ChatProvider>()
+                                              .endInterview();
+                                          context.pop();
+                                        },
+                                        child: Text("종료")),
+                                  ),
+                                )
+                              : Container(),
+                        ],
+                      ),
+                    ),
                     BuildMessageInput(
                       controller: _controller,
                       isSendButtonEnabled: _isSendButtonEnabled,
