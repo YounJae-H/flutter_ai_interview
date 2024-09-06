@@ -19,7 +19,8 @@ class BuildMessageInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isTyping = context.watch<ChatProvider>().isTyping;
+    final isTyping = context.watch<ChatProvider>().isTyping;
+    final isEnded = context.watch<ChatProvider>().isInterviewEnded;
     final containerHeight = MediaQuery.of(context).size.height / 15;
     final keyboardHeight =
         Provider.of<KeyboardProvider>(context).keyboardHeight;
@@ -56,7 +57,7 @@ class BuildMessageInput extends StatelessWidget {
                         enabledBorder: InputBorder.none,
                         errorBorder: InputBorder.none,
                       ),
-                      // enabled: !isTyping,   // AI 응답이 오는 동안 텍스트 필드 비활성화
+                      enabled: !isEnded, // 면접이 종료되면 텍스트 필드 비활성화
                       // onSubmitted: isTyping ? null : onSubmitted,
                       onSubmitted: null,
                     ),
