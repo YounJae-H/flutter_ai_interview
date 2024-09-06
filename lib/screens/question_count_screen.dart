@@ -1,21 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_interview/providers/chat_provider.dart';
-import 'package:flutter_interview/screens/chat_screen.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class QuestionCountScreen extends StatelessWidget {
-  const QuestionCountScreen({super.key});
+  final FixedExtentScrollController fixedExtentScrollController;
+  const QuestionCountScreen(
+      {super.key, required this.fixedExtentScrollController});
 
   @override
   Widget build(BuildContext context) {
     // final chatProvider = context.read<ChatProvider>();
     // final _difficulty = chatProvider.difficulty;
-    // String _selectedDifficulty = chatProvider.selectedDifficulty;
+    // String _selectedDifficulty = chatProvider.selectedDifficulty; 난이도 관련
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("Flutter/Dart"),
+        title: const Text("Flutter/Dart"),
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
         titleSpacing: 0,
@@ -35,6 +37,7 @@ class QuestionCountScreen extends StatelessWidget {
               ),
               Expanded(
                 child: CupertinoPicker(
+                    scrollController: fixedExtentScrollController,
                     itemExtent: 40.0,
                     onSelectedItemChanged: (index) {
                       context
@@ -74,10 +77,11 @@ class QuestionCountScreen extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0))),
                     onPressed: () {
-                      Navigator.push(context,
-                              MaterialPageRoute(builder: (_) => ChatScreen()))
-                          .then((_) =>
-                              context.read<ChatProvider>().endInterview());
+                      context.push('/chat');
+                      // Navigator.push(context,
+                      //         MaterialPageRoute(builder: (_) => ChatScreen()))
+                      //     .then((_) =>
+                      //         context.read<ChatProvider>().endInterview());
                       context.read<ChatProvider>().sendMessage(
                           '면접 질문 ${context.read<ChatProvider>().questionCount}개');
                       // context.read<ChatProvider>().sendMessage(

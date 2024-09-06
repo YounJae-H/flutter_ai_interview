@@ -7,7 +7,7 @@ class ChatProvider with ChangeNotifier {
   final OpenAIService _openAIService = OpenAIService();
   final List<String> _difficulty = ['최하', '하', '중', '상', '최상'];
   String _selectedDifficulty = '중';
-  int _questionCount = 0;
+  int _questionCount = 6;
   bool _isTyping = false;
   bool _isLoading = false;
 
@@ -23,6 +23,7 @@ class ChatProvider with ChangeNotifier {
     if (_isTyping) return;
 
     _addMessage(message, isUser: true);
+
     _setTypingState(true);
     _setLoadingState(true);
 

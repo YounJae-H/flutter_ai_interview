@@ -45,36 +45,43 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFFBACEE0),
-      appBar: AppBar(
-        title: Text("Flutter/Dart"),
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (bool didPop) {
+        context.read<ChatProvider>().endInterview();
+        return;
+      },
+      child: Scaffold(
         backgroundColor: Color(0xFFBACEE0),
-        surfaceTintColor: Color(0xFFBACEE0),
-        titleSpacing: 0,
-      ),
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(), // 화면을 탭하면 키보드를 닫음
-        child: SafeArea(
-          // 텍스트 필드 높이가 변할 때 값을 전달하기 위함 / 높이 만큼 패딩을 추가하여 화면 가림을 방지
-          child: Consumer<KeyboardProvider>(
-            builder: (BuildContext context, value, Widget? child) {
-              return Column(
-                children: [
-                  Expanded(
-                      child: BuildMessageList(
-                    scrollController: _scrollController,
-                    scrollToBottom: _scrollToBottom,
-                  )),
-                  BuildMessageInput(
-                    controller: _controller,
-                    isSendButtonEnabled: _isSendButtonEnabled,
-                    // onSubmitted: _handleSubmitted,  //엔터
-                    onPressed: _handleSendPressed,
-                  ),
-                ],
-              );
-            },
+        appBar: AppBar(
+          title: Text("Flutter/Dart"),
+          backgroundColor: Color(0xFFBACEE0),
+          surfaceTintColor: Color(0xFFBACEE0),
+          titleSpacing: 0,
+        ),
+        body: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(), // 화면을 탭하면 키보드를 닫음
+          child: SafeArea(
+            // 텍스트 필드 높이가 변할 때 값을 전달하기 위함 / 높이 만큼 패딩을 추가하여 화면 가림을 방지
+            child: Consumer<KeyboardProvider>(
+              builder: (BuildContext context, value, Widget? child) {
+                return Column(
+                  children: [
+                    Expanded(
+                        child: BuildMessageList(
+                      scrollController: _scrollController,
+                      scrollToBottom: _scrollToBottom,
+                    )),
+                    BuildMessageInput(
+                      controller: _controller,
+                      isSendButtonEnabled: _isSendButtonEnabled,
+                      // onSubmitted: _handleSubmitted,  //엔터
+                      onPressed: _handleSendPressed,
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),
