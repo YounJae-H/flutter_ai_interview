@@ -45,10 +45,13 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isFirstLoading = context.watch<ChatProvider>().isFirstMessage;
+    final isTyping = context.read<ChatProvider>().isTyping;
     return PopScope(
-      canPop: true,
+      canPop: isTyping ? false : true, // ai 응답이 오는 중이라면 뒤로가기 비활성화
       onPopInvoked: (bool didPop) {
-        context.read<ChatProvider>().endInterview();
+        // print(didPop);
+        if (didPop == true) context.read<ChatProvider>().endInterview();
         return;
       },
       child: Scaffold(
@@ -68,7 +71,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 return Column(
                   children: [
                     Expanded(
-                        child: context.watch<ChatProvider>().isFirstMessage
+                        child: isFirstLoading // ai의 첫 응답이 올때까지 대기
                             ? const Center(child: CircularProgressIndicator())
                             : BuildMessageList(
                                 scrollController: _scrollController,
