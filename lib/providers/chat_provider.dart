@@ -7,9 +7,10 @@ class ChatProvider with ChangeNotifier {
   final OpenAIService _openAIService = OpenAIService();
   final List<String> _difficulty = ['최하', '하', '중', '상', '최상'];
   String _selectedDifficulty = '중';
-  int _questionCount = 6;
-  bool _isTyping = false;
-  bool _isLoading = false;
+  int _questionCount = 6; // 질문 개수 초기값
+  bool _isTyping = false; // ai 타이핑 감지 - ai 응답이 전부 오기 전까지 메시지 전송을 막기 위함.
+  bool _isLoading = false; // ai 응답이 오기 전까지 메시지 박스에 로딩창을 보여주기 위함.
+  bool _isFirstMessage = true; // ai 생성시 첫 응답이 오기까지 화면 중앙에 로딩창을 보여주기 위함
 
   int get questionCount => _questionCount;
   List<String> get difficulty => _difficulty;
@@ -18,6 +19,7 @@ class ChatProvider with ChangeNotifier {
   List<ChatMessage> get messages => _messages;
   bool get isTyping => _isTyping;
   bool get isLoading => _isLoading;
+  bool get isFirstMessage => _isFirstMessage;
 
   Future<void> sendMessage(String message) async {
     if (_isTyping) return;
@@ -29,6 +31,7 @@ class ChatProvider with ChangeNotifier {
 
     String response = await _openAIService.createModel(message);
     _setLoadingState(false);
+    _setisFirstMessage(false);
     await _displayAssistantMessage(response);
 
     _setTypingState(false);
@@ -48,12 +51,12 @@ class ChatProvider with ChangeNotifier {
       _addMessage('', isUser: false);
 
       for (int i = 0; i < line.length; i++) {
-        await Future.delayed(Duration(milliseconds: 2));
+        await Future.delayed(const Duration(milliseconds: 2));
         _messages[index] =
             ChatMessage(message: line.substring(0, i + 1), isUser: false);
         notifyListeners();
       }
-      await Future.delayed(Duration(milliseconds: 10));
+      await Future.delayed(const Duration(milliseconds: 10));
     }
   }
 
@@ -64,6 +67,11 @@ class ChatProvider with ChangeNotifier {
 
   void _setLoadingState(bool isLoading) {
     _isLoading = isLoading;
+    notifyListeners();
+  }
+
+  void _setisFirstMessage(bool isFirstMessage) {
+    _isFirstMessage = isFirstMessage;
     notifyListeners();
   }
 
@@ -81,6 +89,7 @@ class ChatProvider with ChangeNotifier {
     // 대화 종료: messages 리스트를 초기화하여 이전 대화 내역 삭제 (화면에 표시하는 대회 내역 삭제)
     _messages.clear(); // 화면 표시 대화 내역 삭제
     _openAIService.endConversation(); //OpenAI 기존 맥락 파괴 후 초기화
+    _setisFirstMessage(true); // 모델 생성시 첫 메시지 응답이 오는 동안 로딩창을 보여주기 위함
     notifyListeners();
   }
 }

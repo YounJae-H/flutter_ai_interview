@@ -68,10 +68,12 @@ class _ChatScreenState extends State<ChatScreen> {
                 return Column(
                   children: [
                     Expanded(
-                        child: BuildMessageList(
-                      scrollController: _scrollController,
-                      scrollToBottom: _scrollToBottom,
-                    )),
+                        child: context.watch<ChatProvider>().isFirstMessage
+                            ? const Center(child: CircularProgressIndicator())
+                            : BuildMessageList(
+                                scrollController: _scrollController,
+                                scrollToBottom: _scrollToBottom,
+                              )),
                     BuildMessageInput(
                       controller: _controller,
                       isSendButtonEnabled: _isSendButtonEnabled,
