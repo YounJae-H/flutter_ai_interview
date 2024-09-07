@@ -31,13 +31,35 @@ class ChatProvider with ChangeNotifier {
     _setTypingState(true);
     _setLoadingState(true);
 
-    String response = await _openAIService.createModel(message);
-    _setLoadingState(false);
-    _setisFirstMessage(false);
-    await _displayAssistantMessage(response);
+    String response;
+    String response2;
+    if (!((message.contains('정답') && message.length < 10) ||
+        (message.contains('오답') && message.length < 10))) {
+      response = await _openAIService.createModel(message);
+      _setLoadingState(false);
+      _setisFirstMessage(false);
 
-    checkForEndInterview();
-    _setTypingState(false);
+      await _displayAssistantMessage(response);
+
+      checkForEndInterview();
+      _setTypingState(false);
+
+      return;
+    } else {
+      response = '"$message"라는 답변은 면접 상황에서 적절하지 않습니다.';
+      response2 = await _openAIService.createModel('질문이 뭐였죠?');
+      _setLoadingState(false);
+      _setisFirstMessage(false);
+
+      await _displayAssistantMessage(response);
+      // await _displayAssistantMessage('다시 질문 드리겠습니다.');
+      await _displayAssistantMessage(response2);
+
+      checkForEndInterview();
+      _setTypingState(false);
+
+      return;
+    }
   }
 
   void _addMessage(String message, {required bool isUser}) {
@@ -99,7 +121,7 @@ class ChatProvider with ChangeNotifier {
 
   void checkForEndInterview() {
     for (var msg in _messages) {
-      if (!msg.isUser && msg.message.contains('종료')) {
+      if (!msg.isUser && msg.message.contains('면접이 종료되었습니다.')) {
         _isInterviewEnded = true; // 조건이 만족되었으므로 true
         return;
       }

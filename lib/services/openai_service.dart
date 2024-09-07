@@ -12,10 +12,10 @@ class OpenAIService {
       'content': Env.prompt,
     });
 
-    messages.add({
-      'role': 'user',
-      'content': Env.userPrompt,
-    });
+    // messages.add({
+    //   'role': 'user',
+    //   'content': Env.userPrompt,
+    // });
   }
 
   Future<String> createModel(String sendMessage) async {
@@ -74,9 +74,9 @@ class OpenAIService {
       'content': Env.prompt,
     });
 
-    messages.add({
-      'role': 'user',
-      'content': Env.userPrompt,
-    });
+    // messages.add({
+    //   'role': 'user',
+    //   'content': Env.userPrompt,
+    // });
   }
 }

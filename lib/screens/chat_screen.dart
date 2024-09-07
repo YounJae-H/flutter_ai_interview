@@ -130,6 +130,7 @@ class _ChatScreenState extends State<ChatScreen> {
       _controller.clear();
       _isSendButtonEnabled.value = true;
     }
+    return;
   }
 
   void _scrollToBottom() {

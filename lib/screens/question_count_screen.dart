@@ -86,7 +86,7 @@ class QuestionCountScreen extends StatelessWidget {
                       //     .then((_) =>
                       //         context.read<ChatProvider>().endInterview());
                       context.read<ChatProvider>().sendMessage(
-                          '면접 질문 ${context.read<ChatProvider>().questionCount}개');
+                          '면접 질문 ${context.read<ChatProvider>().questionCount}개 주세요.');
                       // context.read<ChatProvider>().sendMessage(
                       //     '면접 질문 ${context.read<ChatProvider>().questionCount}개 / 난이도${context.read<ChatProvider>().selectedDifficulty}로 해주세요. 난이도도 언급하세요');
                     },
