@@ -58,6 +58,7 @@ class BuildMessageInput extends StatelessWidget {
                         errorBorder: InputBorder.none,
                       ),
                       enabled: !isEnded, // 면접이 종료되면 텍스트 필드 비활성화
+
                       // onSubmitted: isTyping ? null : onSubmitted,
                       onSubmitted: null,
                     ),
@@ -69,7 +70,7 @@ class BuildMessageInput extends StatelessWidget {
               ValueListenableBuilder<bool>(
                 valueListenable: isSendButtonEnabled,
                 builder: (BuildContext context, bool isEnabled, Widget? child) {
-                  final isBoolean = isTyping || isEnabled;
+                  final isBoolean = isTyping || isEnded || isEnabled;
                   return SizedBox(
                     height: containerHeight,
                     width: containerHeight,
