@@ -60,12 +60,12 @@ class BuildMessageContent extends StatelessWidget {
                       padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color:
-                            line.contains('정답입니다') ? Colors.red : Colors.white,
+                            line.contains('정답입니다！') ? Colors.red : Colors.white,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
                         line,
-                        style: line.contains('정답입니다')
+                        style: line.contains('정답입니다！')
                             ? TextStyle(color: Colors.white)
                             : TextStyle(color: Colors.black),
                       ),

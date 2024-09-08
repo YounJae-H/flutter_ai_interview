@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_interview/providers/chat_provider.dart';
 import 'package:flutter_interview/providers/keyboard_provider.dart';
+import 'package:flutter_interview/component/custom_dialog.dart';
 import 'package:flutter_interview/widgets/message_input.dart';
 import 'package:flutter_interview/widgets/message_list.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -48,12 +48,18 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     final isFirstLoading = context.watch<ChatProvider>().isFirstMessage;
     final isTyping = context.read<ChatProvider>().isTyping;
-    final isEnded = context.watch<ChatProvider>().isInterviewEnded;
+    // final isEnded = context.read<ChatProvider>().isEnded;
+
     return PopScope(
-      canPop: isTyping ? false : true, // ai 응답이 오는 중이라면 뒤로가기 비활성화
+      canPop: false, // 뒤로가기 비활성화
       onPopInvoked: (bool didPop) {
-        // print(didPop);
-        if (didPop == true) context.read<ChatProvider>().endInterview();
+        if (isTyping == didPop) {
+          showDialog(
+              context: context,
+              builder: (_) {
+                return CustomDialog();
+              });
+        }
         return;
       },
       child: Scaffold(
@@ -81,23 +87,6 @@ class _ChatScreenState extends State<ChatScreen> {
                                   scrollController: _scrollController,
                                   scrollToBottom: _scrollToBottom,
                                 ),
-                          isEnded
-                              ? Center(
-                                  child: Container(
-                                    width: 300,
-                                    height: 300,
-                                    color: Colors.black,
-                                    child: ElevatedButton(
-                                        onPressed: () {
-                                          context
-                                              .read<ChatProvider>()
-                                              .endInterview();
-                                          context.pop();
-                                        },
-                                        child: Text("종료")),
-                                  ),
-                                )
-                              : Container(),
                         ],
                       ),
                     ),

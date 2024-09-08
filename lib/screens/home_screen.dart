@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_interview/component/bottom_navigation.dart';
+import 'package:flutter_interview/component/custom_bottom_navigation.dart';
 import 'package:flutter_interview/providers/bottom_navigation_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
