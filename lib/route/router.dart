@@ -16,17 +16,30 @@ final router = GoRouter(
     GoRoute(
       path: '/question',
       builder: (context, state) {
+        // extra 값이 null인지 확인하고 String으로 안전하게 변환
+        final subject =
+            state.extra != null ? state.extra.toString() : 'Unknown Subject';
         WidgetsBinding.instance.addPostFrameCallback((_) {
           // 페이지 빌드 후 상태를 변경
           context.read<ScrollControllerProvider>().setScrollController();
         });
 
-        return QuestionCountScreen();
+        return QuestionCountScreen(
+          subject: subject,
+        );
       },
     ),
     GoRoute(
       path: '/chat',
-      builder: (context, state) => ChatScreen(),
+      builder: (context, state) {
+        // extra 값이 null인지 확인하고 String으로 안전하게 변환
+        final subject =
+            state.extra != null ? state.extra.toString() : 'Unknown Subject';
+
+        return ChatScreen(
+          subject: subject,
+        );
+      },
     ),
   ],
 );

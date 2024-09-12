@@ -24,9 +24,7 @@ class BuildMessageContent extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width * 0.6;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: isLoading &&
-              context.read<ChatProvider>().messages.last.message == message &&
-              isLastMessage
+      children: isLoading && isLastMessage
           ? [
               Padding(
                 padding: const EdgeInsets.only(bottom: 4.0),

@@ -7,6 +7,9 @@ import 'package:flutter_interview/widgets/message_list.dart';
 import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
+  final String subject;
+
+  const ChatScreen({super.key, required this.subject});
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
@@ -65,7 +68,7 @@ class _ChatScreenState extends State<ChatScreen> {
       child: Scaffold(
         backgroundColor: Color(0xFFBACEE0),
         appBar: AppBar(
-          title: const Text("Flutter/Dart"),
+          title: Text(widget.subject),
           backgroundColor: Color(0xFFBACEE0),
           surfaceTintColor: Color(0xFFBACEE0),
           titleSpacing: 0,

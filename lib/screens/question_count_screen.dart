@@ -6,8 +6,10 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class QuestionCountScreen extends StatelessWidget {
+  final String subject;
   const QuestionCountScreen({
     super.key,
+    required this.subject,
   });
 
   @override
@@ -20,7 +22,7 @@ class QuestionCountScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("Flutter/Dart"),
+        title: Text(subject),
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
         titleSpacing: 0,
@@ -80,7 +82,7 @@ class QuestionCountScreen extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0))),
                     onPressed: () {
-                      context.push('/chat');
+                      context.push('/chat', extra: subject);
                       // Navigator.push(context,
                       //         MaterialPageRoute(builder: (_) => ChatScreen()))
                       //     .then((_) =>
