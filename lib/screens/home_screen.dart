@@ -9,6 +9,7 @@ class HomeScreen extends StatelessWidget {
     return const Column(
       children: [
         TopBanner(),
+        SizedBox(height: 40.0),
         InterviewBanner(),
       ],
     );

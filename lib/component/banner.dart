@@ -10,15 +10,18 @@ class InterviewBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 5,
       color: Colors.white,
       child: Column(
         children: [
-          const Text(
-            "AI 면접",
-            style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.black),
+          Container(
+            child: const Text(
+              "AI 면접",
+              style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
+            ),
           ),
           InterviewItem(
             subject: 'Flutter/Dart',
@@ -42,6 +45,7 @@ class TopBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 5,
       color: Colors.white,
       child: TextButton(
         style: TextButton.styleFrom(

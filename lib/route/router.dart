@@ -21,24 +21,30 @@ final router = GoRouter(
       routes: [
         GoRoute(
           path: '/home',
-          builder: (context, state) => HomeScreen(),
+          pageBuilder: (context, state) =>
+              // NoTransitionPage => 전환 애니메이션 제거
+              // 화면 전환시 깜빡이는 문제 해결하기 위해서
+              // 페이지 전환 애니메이션 주거나 제거 해야함.
+              const NoTransitionPage(child: HomeScreen()),
         ),
         GoRoute(
           path: '/learning',
-          builder: (context, state) {
+          pageBuilder: (context, state) {
             final subject = state.extra != null
                 ? state.extra.toString()
                 : 'Unknown Subject';
-            return LearningScreen(subject: subject);
+            return NoTransitionPage(child: LearningScreen(subject: subject));
           },
         ),
         GoRoute(
           path: '/archive',
-          builder: (context, state) => ArchiveScreen(),
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: ArchiveScreen()),
         ),
         GoRoute(
           path: '/profile',
-          builder: (context, state) => ProfileScreen(),
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: ProfileScreen()),
         ),
       ],
     ),

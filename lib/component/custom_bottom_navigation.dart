@@ -20,6 +20,7 @@ class CutomBottomNavigationBar extends StatelessWidget {
         currentIndex: currentIndex,
         type: BottomNavigationBarType.fixed,
         showUnselectedLabels: true,
+        backgroundColor: Colors.white,
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.grey,
         items: const [

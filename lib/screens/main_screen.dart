@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
-  final child;
-  const MainScreen({super.key, this.child});
+  final Widget child;
+  const MainScreen({super.key, required this.child});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -19,13 +19,13 @@ class _MainScreenState extends State<MainScreen> {
     final int currentIndex =
         context.watch<BottomNavigationProvider>().currentIndex;
     return Scaffold(
-      backgroundColor: Color(0xFFBACEE0),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text(
           "MOAI",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Color(0xFFBACEE0),
+        backgroundColor: Colors.white,
       ),
       body: widget.child,
       bottomNavigationBar: CutomBottomNavigationBar(
