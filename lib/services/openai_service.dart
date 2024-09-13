@@ -5,11 +5,14 @@ import 'package:flutter_interview/env/env.dart';
 class OpenAIService {
   List<Map<String, dynamic>> messages = [];
 
-  OpenAIService() {
+  String subject;
+  // 프롬프트를 동적으로 설정
+  String get finalPrompt => Env.prompt.replaceAll('#subject', subject);
+  OpenAIService({required this.subject}) {
     // 시스템 메시지를 초기화 시에 설정
     messages.add({
       'role': 'system',
-      'content': Env.prompt,
+      'content': finalPrompt,
     });
 
     // messages.add({
@@ -19,6 +22,7 @@ class OpenAIService {
   }
 
   Future<String> createModel(String sendMessage) async {
+    print(subject);
     const String apiKey = Env.apiKey;
     const String apiUrl = 'https://api.openai.com/v1/chat/completions';
 
@@ -71,7 +75,7 @@ class OpenAIService {
     // 종료 메시지를 원한다면 아래 내용을 추가
     messages.add({
       'role': 'system',
-      'content': Env.prompt,
+      'content': finalPrompt,
     });
 
     // messages.add({
@@ -79,4 +83,12 @@ class OpenAIService {
     //   'content': Env.userPrompt,
     // });
   }
+
+  // void setSubject(String newValue) {
+  //   print('현재 subject: $subject');
+  //   subject = newValue;
+  //   print('새 subject: $subject');
+
+  //   endConversation();
+  // }
 }

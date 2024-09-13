@@ -14,8 +14,8 @@ class CutomBottomNavigationBar extends StatelessWidget {
         // highlightColor: Colors.transparent,
       ),
       child: BottomNavigationBar(
-        selectedLabelStyle: TextStyle(fontSize: 13),
-        unselectedLabelStyle: TextStyle(fontSize: 13),
+        selectedLabelStyle: const TextStyle(fontSize: 13),
+        unselectedLabelStyle: const TextStyle(fontSize: 13),
         onTap: onTap,
         currentIndex: currentIndex,
         type: BottomNavigationBarType.fixed,

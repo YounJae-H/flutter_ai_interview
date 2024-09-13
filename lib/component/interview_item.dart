@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class InterviewItem extends StatelessWidget {
-  final String subject;
+  final String title;
   final VoidCallback onPressed;
 
   const InterviewItem({
     super.key,
-    required this.subject,
+    required this.title,
     required this.onPressed,
   });
 
@@ -26,7 +26,7 @@ class InterviewItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                subject,
+                title,
                 style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,

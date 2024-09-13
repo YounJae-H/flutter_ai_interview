@@ -15,7 +15,7 @@ class QuestionCountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scrollController =
-        context.watch<ScrollControllerProvider>().scrollController;
+        context.watch<ScrollControllerProvider>().questionScrollController;
     // final chatProvider = context.read<ChatProvider>();
     // final _difficulty = chatProvider.difficulty;
     // String _selectedDifficulty = chatProvider.selectedDifficulty; 난이도 관련
@@ -45,9 +45,8 @@ class QuestionCountScreen extends StatelessWidget {
                     scrollController: scrollController,
                     itemExtent: 40.0,
                     onSelectedItemChanged: (index) {
-                      context
-                          .read<ChatProvider>()
-                          .updateQuestionCount(index + 2);
+                      context.read<ChatProvider>().updateQuestionCount(
+                          scrollController.selectedItem + 2);
                     },
                     children: List<Widget>.generate(
                         9,
@@ -83,12 +82,10 @@ class QuestionCountScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8.0))),
                     onPressed: () {
                       context.push('/chat', extra: subject);
-                      // Navigator.push(context,
-                      //         MaterialPageRoute(builder: (_) => ChatScreen()))
-                      //     .then((_) =>
-                      //         context.read<ChatProvider>().endInterview());
+
                       context.read<ChatProvider>().sendMessage(
-                          '면접 질문 ${context.read<ChatProvider>().questionCount}개 주세요.');
+                          '면접 질문 ${context.read<ChatProvider>().questionCount}개');
+
                       // context.read<ChatProvider>().sendMessage(
                       //     '면접 질문 ${context.read<ChatProvider>().questionCount}개 / 난이도${context.read<ChatProvider>().selectedDifficulty}로 해주세요. 난이도도 언급하세요');
                     },

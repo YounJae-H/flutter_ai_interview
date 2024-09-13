@@ -4,7 +4,7 @@ import 'package:flutter_interview/services/openai_service.dart';
 
 class ChatProvider with ChangeNotifier {
   final List<ChatMessage> _messages = [];
-  final OpenAIService _openAIService = OpenAIService();
+  final OpenAIService _openAIService = OpenAIService(subject: 'Flutter');
   final List<String> _difficulty = ['최하', '하', '중', '상', '최상'];
   String _selectedDifficulty = '중';
   int _questionCount = 6; // 질문 개수 초기값
@@ -127,5 +127,12 @@ class ChatProvider with ChangeNotifier {
       }
     }
     _isEnded = false; // 조건이 만족되지 않았으므로 false
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    endInterview();
+    super.dispose();
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_interview/providers/chat_provider.dart';
+import 'package:flutter_interview/providers/scroll_controller_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -52,8 +53,10 @@ class CustomDialog extends StatelessWidget {
                     child: ElevatedButton(
                         onPressed: () {
                           context.read<ChatProvider>().endInterview();
-                          context.pop();
-                          context.pop();
+                          context
+                              .read<ScrollControllerProvider>()
+                              .setScrollController();
+                          context.go('/home');
                         },
                         style: ElevatedButton.styleFrom(
                             minimumSize: const Size(double.infinity, 55.0),

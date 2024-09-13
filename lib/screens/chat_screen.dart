@@ -15,7 +15,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _textEditingController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final ValueNotifier<bool> _isSendButtonEnabled =
       ValueNotifier(true); // boolean 값을 감시
@@ -26,16 +26,16 @@ class _ChatScreenState extends State<ChatScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
 
     // 텍스트 필드의 내용이 변경될 때마다 Listener가 실행
-    _controller.addListener(() {
+    _textEditingController.addListener(() {
       // 텍스트 필드 내의 내용이 있는지 확인. 비어 있으면 true 반환
-      _isSendButtonEnabled.value = _controller.text.isEmpty;
+      _isSendButtonEnabled.value = _textEditingController.text.isEmpty;
       _updateKeyboardHeight();
     });
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _textEditingController.dispose();
     _scrollController.dispose();
     _isSendButtonEnabled.dispose();
     super.dispose();
@@ -94,7 +94,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                     ),
                     BuildMessageInput(
-                      controller: _controller,
+                      controller: _textEditingController,
                       isSendButtonEnabled: _isSendButtonEnabled,
                       // onSubmitted: _handleSubmitted,  //엔터
                       onPressed: _handleSendPressed,
@@ -117,9 +117,9 @@ class _ChatScreenState extends State<ChatScreen> {
   // }
 
   void _handleSendPressed() {
-    if (_controller.text.isNotEmpty) {
-      context.read<ChatProvider>().sendMessage(_controller.text);
-      _controller.clear();
+    if (_textEditingController.text.isNotEmpty) {
+      context.read<ChatProvider>().sendMessage(_textEditingController.text);
+      _textEditingController.clear();
       _isSendButtonEnabled.value = true;
     }
     return;

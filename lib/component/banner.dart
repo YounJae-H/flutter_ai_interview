@@ -24,12 +24,12 @@ class InterviewBanner extends StatelessWidget {
             ),
           ),
           InterviewItem(
-            subject: 'Flutter/Dart',
+            title: 'Flutter/Dart',
             onPressed: () => context.push('/question', extra: 'Flutter/Dart'),
           ),
           InterviewItem(
-            subject: '주제 설정',
-            onPressed: () => context.push('/question', extra: '테스트페이지'),
+            title: '주제 설정',
+            onPressed: () => context.push('/subject', extra: '주제 설정'),
           ),
         ],
       ),

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview/providers/chat_provider.dart';
 import 'package:flutter_interview/providers/scroll_controller_provider.dart';
 import 'package:flutter_interview/screens/archive_screen.dart';
 import 'package:flutter_interview/screens/chat_screen.dart';
 import 'package:flutter_interview/screens/home_screen.dart';
 import 'package:flutter_interview/screens/main_screen.dart';
 import 'package:flutter_interview/screens/learning_screen.dart';
+import 'package:flutter_interview/screens/pick_subject.dart';
 import 'package:flutter_interview/screens/profile_screen.dart';
 import 'package:flutter_interview/screens/question_count_screen.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
+// OpenAIService _openAIService = OpenAIService();
 final router = GoRouter(
   initialLocation: '/home',
   routes: [
@@ -49,13 +51,26 @@ final router = GoRouter(
       ],
     ),
     GoRoute(
+      path: '/subject',
+      builder: (context, state) {
+        final subject =
+            state.extra != null ? state.extra.toString() : 'Unknown Subject';
+        // WidgetsBinding.instance.addPostFrameCallback((_) {
+        //   context.read<ScrollControllerProvider>().setScrollController();
+        // });
+
+        return PickSubject(subject: subject);
+      },
+    ),
+    GoRoute(
       path: '/question',
       builder: (context, state) {
         final subject =
             state.extra != null ? state.extra.toString() : 'Unknown Subject';
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          context.read<ScrollControllerProvider>().setScrollController();
-        });
+        // WidgetsBinding.instance.addPostFrameCallback((_) {
+        //   context.read<ScrollControllerProvider>().setScrollController();
+        // });
+
         return QuestionCountScreen(subject: subject);
       },
     ),

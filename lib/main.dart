@@ -3,6 +3,7 @@ import 'package:flutter_interview/providers/bottom_navigation_provider.dart';
 import 'package:flutter_interview/providers/chat_provider.dart';
 import 'package:flutter_interview/providers/keyboard_provider.dart';
 import 'package:flutter_interview/providers/scroll_controller_provider.dart';
+import 'package:flutter_interview/providers/pick_subject_provider.dart';
 import 'package:flutter_interview/route/router.dart';
 import 'package:provider/provider.dart';
 
@@ -22,10 +23,11 @@ class _App extends StatelessWidget {
           ChangeNotifierProvider(create: (_) => ChatProvider()),
           ChangeNotifierProvider(create: (_) => KeyboardProvider()),
           ChangeNotifierProvider(create: (_) => ScrollControllerProvider()),
+          ChangeNotifierProvider(create: (_) => PickSubjectProvider()),
           ChangeNotifierProvider(create: (_) => BottomNavigationProvider()),
         ],
         child: MaterialApp.router(
-          title: '플접관',
+          title: 'MOAI',
           routerConfig: router,
         ));
   }
