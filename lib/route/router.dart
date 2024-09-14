@@ -1,6 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_interview/providers/chat_provider.dart';
-import 'package:flutter_interview/providers/scroll_controller_provider.dart';
 import 'package:flutter_interview/screens/archive_screen.dart';
 import 'package:flutter_interview/screens/chat_screen.dart';
 import 'package:flutter_interview/screens/home_screen.dart';
@@ -68,7 +65,7 @@ final router = GoRouter(
         final subject =
             state.extra != null ? state.extra.toString() : 'Unknown Subject';
         // WidgetsBinding.instance.addPostFrameCallback((_) {
-        //   context.read<ScrollControllerProvider>().setScrollController();
+        //   // context.read<ScrollControllerProvider>().setScrollController();
         // });
 
         return QuestionCountScreen(subject: subject);

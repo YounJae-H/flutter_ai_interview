@@ -4,9 +4,10 @@ import 'package:flutter_interview/services/openai_service.dart';
 
 class ChatProvider with ChangeNotifier {
   final List<ChatMessage> _messages = [];
-  final OpenAIService _openAIService = OpenAIService(subject: 'Flutter');
+  late final OpenAIService _openAIService;
   final List<String> _difficulty = ['최하', '하', '중', '상', '최상'];
   String _selectedDifficulty = '중';
+  String _subject;
   int _questionCount = 6; // 질문 개수 초기값
   bool _isTyping = false; // ai 타이핑 감지 - ai 응답이 전부 오기 전까지 메시지 전송을 막기 위함.
   bool _isLoading = false; // ai 응답이 오기 전까지 메시지 박스에 로딩창을 보여주기 위함.
@@ -22,6 +23,10 @@ class ChatProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get isFirstMessage => _isFirstMessage;
   bool get isEnded => _isEnded;
+  String get subject => _subject;
+
+  ChatProvider(this._subject)
+      : _openAIService = OpenAIService(subject: _subject);
 
   Future<void> sendMessage(String message) async {
     if (_isTyping) return;
@@ -127,6 +132,12 @@ class ChatProvider with ChangeNotifier {
       }
     }
     _isEnded = false; // 조건이 만족되지 않았으므로 false
+  }
+
+  void setSubject(String newValue) {
+    _subject = newValue;
+    _openAIService.setSubject(_subject);
+    notifyListeners();
   }
 
   @override

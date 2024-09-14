@@ -82,7 +82,7 @@ class QuestionCountScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8.0))),
                     onPressed: () {
                       context.push('/chat', extra: subject);
-
+                      context.read<ChatProvider>().setSubject(subject);
                       context.read<ChatProvider>().sendMessage(
                           '면접 질문 ${context.read<ChatProvider>().questionCount}개');
 

@@ -20,7 +20,7 @@ class _App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => ChatProvider()),
+          ChangeNotifierProvider(create: (_) => ChatProvider('Flutter')),
           ChangeNotifierProvider(create: (_) => KeyboardProvider()),
           ChangeNotifierProvider(create: (_) => ScrollControllerProvider()),
           ChangeNotifierProvider(create: (_) => PickSubjectProvider()),

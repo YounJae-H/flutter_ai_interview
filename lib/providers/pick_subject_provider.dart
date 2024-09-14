@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 
 class PickSubjectProvider with ChangeNotifier {
   final List<String> _subjectList = [
-    '간호사',
-    '의사',
-    '약사',
-    '검사',
-    '변호사',
-    '회계사',
-    '직업 상담사',
-    '심리 상담사',
-    '수학 교사',
+    'Android',
+    'Swift/iOS',
+    'React',
+    'ReactNative',
+    'Java',
+    'JavaScript',
+    'React',
+    'Spring',
+    'Unity',
   ];
   String _pickSubject = "변호사";
   // String _subject = "Flutter";

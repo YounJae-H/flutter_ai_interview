@@ -22,7 +22,6 @@ class OpenAIService {
   }
 
   Future<String> createModel(String sendMessage) async {
-    print(subject);
     const String apiKey = Env.apiKey;
     const String apiUrl = 'https://api.openai.com/v1/chat/completions';
 
@@ -91,4 +90,9 @@ class OpenAIService {
 
   //   endConversation();
   // }
+
+  void setSubject(String newValue) {
+    subject = newValue;
+    endConversation();
+  }
 }
