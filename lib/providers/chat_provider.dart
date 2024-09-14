@@ -11,38 +11,49 @@ class ChatProvider with ChangeNotifier {
   int _questionCount = 6; // 질문 개수 초기값
   bool _isTyping = false; // ai 타이핑 감지 - ai 응답이 전부 오기 전까지 메시지 전송을 막기 위함.
   bool _isLoading = false; // ai 응답이 오기 전까지 메시지 박스에 로딩창을 보여주기 위함.
-  bool _isFirstMessage = true; // ai 생성시 첫 응답이 오기까지 화면 중앙에 로딩창을 보여주기 위함
-  bool _isEnded = false; // 면접이 종료되었는지 확인
+  bool _isFirstMessage = true; // ai 생성시 첫 응답이 오기까지 화면 중앙에 로딩창을 보여주기 위함.
+  bool _isEnded = false; // 면접이 종료되었는지 확인.
+  bool _isLearning = false; // 학습 페이지인지 아닌지 확인.
+  String answerRespone = "";
 
   int get questionCount => _questionCount;
   List<String> get difficulty => _difficulty;
   String get selectedDifficulty => _selectedDifficulty;
+  String get subject => _subject;
 
   List<ChatMessage> get messages => _messages;
   bool get isTyping => _isTyping;
   bool get isLoading => _isLoading;
   bool get isFirstMessage => _isFirstMessage;
   bool get isEnded => _isEnded;
-  String get subject => _subject;
+  bool get isLearning => _isLearning;
 
   ChatProvider(this._subject)
       : _openAIService = OpenAIService(subject: _subject);
+
+  Future<void> answerMessage(String message) async {
+    _addMessage(message, isUser: true);
+  }
 
   Future<void> sendMessage(String message) async {
     if (_isTyping) return;
 
     _addMessage(message, isUser: true);
-
     _setTypingState(true);
     _setLoadingState(true);
 
     String response;
     String response2;
+
     if (!((message.contains('정답') && message.length < 10) ||
         (message.contains('오답') && message.length < 10))) {
       response = await _openAIService.createModel(message);
+      if (_isLearning) {
+        answerRespone = await _openAIService.createAnswerModel(response);
+      }
+
       _setLoadingState(false);
-      _setisFirstMessage(false);
+      _setIsFirstMessage(false);
 
       await _displayAssistantMessage(response);
 
@@ -54,7 +65,7 @@ class ChatProvider with ChangeNotifier {
       response = '"$message"라는 답변은 면접 상황에서 적절하지 않습니다.';
       response2 = await _openAIService.createModel('질문이 뭐였죠?');
       _setLoadingState(false);
-      _setisFirstMessage(false);
+      _setIsFirstMessage(false);
 
       await _displayAssistantMessage(response);
       // await _displayAssistantMessage('다시 질문 드리겠습니다.');
@@ -100,8 +111,13 @@ class ChatProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void _setisFirstMessage(bool isFirstMessage) {
+  void _setIsFirstMessage(bool isFirstMessage) {
     _isFirstMessage = isFirstMessage;
+    notifyListeners();
+  }
+
+  void setIsLearning(bool isLearning) {
+    _isLearning = isLearning;
     notifyListeners();
   }
 
@@ -119,7 +135,8 @@ class ChatProvider with ChangeNotifier {
     // 대화 종료: messages 리스트를 초기화하여 이전 대화 내역 삭제 (화면에 표시하는 대회 내역 삭제)
     _messages.clear(); // 화면 표시 대화 내역 삭제
     _openAIService.endConversation(); //OpenAI 기존 맥락 파괴 후 초기화
-    _setisFirstMessage(true); // 모델 생성시 첫 메시지 응답이 오는 동안 로딩창을 보여주기 위함
+    answerRespone = "";
+    _setIsFirstMessage(true); // 모델 생성시 첫 메시지 응답이 오는 동안 로딩창을 보여주기 위함
     _isEnded = false; // 면접 종료 여부
     notifyListeners();
   }

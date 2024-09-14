@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_interview/component/interview_item.dart';
+import 'package:flutter_interview/providers/chat_provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
-class InterviewBanner extends StatelessWidget {
-  const InterviewBanner({
+class HomeBanner extends StatelessWidget {
+  const HomeBanner({
     super.key,
   });
 
@@ -52,7 +54,11 @@ class TopBanner extends StatelessWidget {
             overlayColor: Colors.black,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0))),
-        onPressed: () {},
+        onPressed: () {
+          // context.read<ChatProvider>().setIsLearning(true);
+          context.push('/learning');
+          context.push('/subject', extra: 'AI 학습');
+        },
         child: const SizedBox(
           height: 80,
           width: double.infinity,

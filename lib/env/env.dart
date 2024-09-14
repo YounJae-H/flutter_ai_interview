@@ -13,4 +13,7 @@ abstract class Env {
 
   @EnviedField(varName: 'USER_PROMPT', obfuscate: false)
   static const String userPrompt = _Env.userPrompt;
+
+  @EnviedField(varName: 'ANSWER_PROMPT', obfuscate: false)
+  static const String answerPrompt = _Env.answerPrompt;
 }

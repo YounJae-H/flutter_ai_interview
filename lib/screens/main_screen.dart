@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview/color/colors.dart';
 import 'package:flutter_interview/component/custom_bottom_navigation.dart';
 import 'package:flutter_interview/providers/bottom_navigation_provider.dart';
 import 'package:go_router/go_router.dart';
@@ -19,13 +20,13 @@ class _MainScreenState extends State<MainScreen> {
     final int currentIndex =
         context.watch<BottomNavigationProvider>().currentIndex;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: primaryColor,
       appBar: AppBar(
         title: const Text(
           "MOAI",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: primaryColor,
       ),
       body: widget.child,
       bottomNavigationBar: CutomBottomNavigationBar(

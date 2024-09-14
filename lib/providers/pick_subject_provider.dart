@@ -12,7 +12,7 @@ class PickSubjectProvider with ChangeNotifier {
     'Spring',
     'Unity',
   ];
-  String _pickSubject = "변호사";
+  String _pickSubject = "Java";
   // String _subject = "Flutter";
 
   final TextEditingController _textEditingController = TextEditingController();

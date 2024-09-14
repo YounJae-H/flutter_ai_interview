@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview/color/colors.dart';
 
 class CutomBottomNavigationBar extends StatelessWidget {
   final ValueChanged<int>? onTap;
@@ -20,7 +21,7 @@ class CutomBottomNavigationBar extends StatelessWidget {
         currentIndex: currentIndex,
         type: BottomNavigationBarType.fixed,
         showUnselectedLabels: true,
-        backgroundColor: Colors.white,
+        backgroundColor: primaryColor,
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.grey,
         items: const [

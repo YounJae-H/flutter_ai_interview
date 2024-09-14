@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_interview/providers/chat_provider.dart';
 import 'package:flutter_interview/screens/archive_screen.dart';
 import 'package:flutter_interview/screens/chat_screen.dart';
 import 'package:flutter_interview/screens/home_screen.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_interview/screens/pick_subject.dart';
 import 'package:flutter_interview/screens/profile_screen.dart';
 import 'package:flutter_interview/screens/question_count_screen.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 // OpenAIService _openAIService = OpenAIService();
 final router = GoRouter(
@@ -20,11 +23,15 @@ final router = GoRouter(
       routes: [
         GoRoute(
           path: '/home',
-          pageBuilder: (context, state) =>
-              // NoTransitionPage => 전환 애니메이션 제거
-              // 화면 전환시 깜빡이는 문제 해결하기 위해서
-              // 페이지 전환 애니메이션 주거나 제거 해야함.
-              const NoTransitionPage(child: HomeScreen()),
+          pageBuilder: (context, state) {
+            // NoTransitionPage => 전환 애니메이션 제거
+            // 화면 전환시 깜빡이는 문제 해결하기 위해서
+            // 페이지 전환 애니메이션 주거나 제거 해야함.
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              context.read<ChatProvider>().setIsLearning(false);
+            });
+            return const NoTransitionPage(child: HomeScreen());
+          },
         ),
         GoRoute(
           path: '/learning',
@@ -32,6 +39,9 @@ final router = GoRouter(
             final subject = state.extra != null
                 ? state.extra.toString()
                 : 'Unknown Subject';
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              context.read<ChatProvider>().setIsLearning(true);
+            });
             return NoTransitionPage(child: LearningScreen(subject: subject));
           },
         ),

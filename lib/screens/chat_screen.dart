@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_interview/providers/chat_provider.dart';
 import 'package:flutter_interview/providers/keyboard_provider.dart';
 import 'package:flutter_interview/component/custom_dialog.dart';
+import 'package:flutter_interview/widgets/answer_check_button.dart';
 import 'package:flutter_interview/widgets/message_input.dart';
 import 'package:flutter_interview/widgets/message_list.dart';
 import 'package:provider/provider.dart';
@@ -51,6 +52,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     final isFirstLoading = context.watch<ChatProvider>().isFirstMessage;
     final isTyping = context.read<ChatProvider>().isTyping;
+    final isLearning = context.read<ChatProvider>().isLearning;
     // final isEnded = context.read<ChatProvider>().isEnded;
 
     return PopScope(
@@ -93,12 +95,14 @@ class _ChatScreenState extends State<ChatScreen> {
                         ],
                       ),
                     ),
-                    BuildMessageInput(
-                      controller: _textEditingController,
-                      isSendButtonEnabled: _isSendButtonEnabled,
-                      // onSubmitted: _handleSubmitted,  //엔터
-                      onPressed: _handleSendPressed,
-                    ),
+                    !isLearning
+                        ? BuildMessageInput(
+                            controller: _textEditingController,
+                            isSendButtonEnabled: _isSendButtonEnabled,
+                            // onSubmitted: _handleSubmitted,  //엔터
+                            onPressed: _handleSendPressed,
+                          )
+                        : AnswerCheckButton(onPressed: _answerSendPressed),
                   ],
                 );
               },
@@ -117,11 +121,23 @@ class _ChatScreenState extends State<ChatScreen> {
   // }
 
   void _handleSendPressed() {
+    final chatProvider = context.read<ChatProvider>();
+
     if (_textEditingController.text.isNotEmpty) {
-      context.read<ChatProvider>().sendMessage(_textEditingController.text);
+      chatProvider.sendMessage(_textEditingController.text);
       _textEditingController.clear();
       _isSendButtonEnabled.value = true;
     }
+    return;
+  }
+
+  void _answerSendPressed() {
+    final chatProvider = context.read<ChatProvider>();
+    final isLearning = context.read<ChatProvider>().isLearning;
+    final answerRespone = context.read<ChatProvider>().answerRespone;
+
+    if (isLearning) chatProvider.sendMessage(answerRespone);
+
     return;
   }
 

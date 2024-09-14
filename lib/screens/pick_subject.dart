@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_interview/color/colors.dart';
 import 'package:flutter_interview/providers/scroll_controller_provider.dart';
 import 'package:flutter_interview/providers/pick_subject_provider.dart';
 import 'package:go_router/go_router.dart';
@@ -87,7 +88,7 @@ class PickSubject extends StatelessWidget {
                   aspectRatio: 6 / 1,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blueAccent,
+                        backgroundColor: buttonColor,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0))),
                     onPressed: () {
@@ -99,9 +100,7 @@ class PickSubject extends StatelessWidget {
                     },
                     child: const Text(
                       "선택",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
+                      style: TextStyle(color: Colors.white, fontSize: 18.0),
                     ),
                   ),
                 ),

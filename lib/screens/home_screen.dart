@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_interview/component/banner.dart';
+import 'package:flutter_interview/component/home_banner.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -10,7 +10,7 @@ class HomeScreen extends StatelessWidget {
       children: [
         TopBanner(),
         SizedBox(height: 40.0),
-        InterviewBanner(),
+        HomeBanner(),
       ],
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_interview/color/colors.dart';
 import 'package:flutter_interview/providers/chat_provider.dart';
 import 'package:flutter_interview/providers/scroll_controller_provider.dart';
 import 'package:go_router/go_router.dart';
@@ -77,7 +78,7 @@ class QuestionCountScreen extends StatelessWidget {
                   aspectRatio: 6 / 1,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blueAccent,
+                        backgroundColor: buttonColor,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0))),
                     onPressed: () {
@@ -91,9 +92,7 @@ class QuestionCountScreen extends StatelessWidget {
                     },
                     child: const Text(
                       "시작하기",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
+                      style: TextStyle(color: Colors.white, fontSize: 18.0),
                     ),
                   ),
                 ),

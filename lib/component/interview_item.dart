@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview/color/colors.dart';
 
 class InterviewItem extends StatelessWidget {
   final String title;
@@ -34,8 +35,11 @@ class InterviewItem extends StatelessWidget {
               ),
               Container(
                 decoration: BoxDecoration(
+                  boxShadow: const [
+                    BoxShadow(color: buttonColor, blurRadius: 1)
+                  ],
                   borderRadius: BorderRadius.circular(8.0),
-                  color: Colors.blueGrey[100],
+                  color: primaryColor,
                 ),
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
@@ -44,7 +48,7 @@ class InterviewItem extends StatelessWidget {
                     style: TextStyle(
                         fontSize: 14.0,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blueGrey),
+                        color: Colors.black54),
                   ),
                 ),
               ),
