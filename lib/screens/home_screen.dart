@@ -10,7 +10,7 @@ class HomeScreen extends StatelessWidget {
       children: [
         TopBanner(),
         SizedBox(height: 40.0),
-        HomeBanner(),
+        MainBanner(),
       ],
     );
   }

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_interview/component/interview_item.dart';
-import 'package:flutter_interview/providers/chat_provider.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
-class HomeBanner extends StatelessWidget {
-  const HomeBanner({
+class MainBanner extends StatelessWidget {
+  const MainBanner({
     super.key,
   });
 
@@ -56,7 +54,8 @@ class TopBanner extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8.0))),
         onPressed: () {
           // context.read<ChatProvider>().setIsLearning(true);
-          context.push('/learning');
+          context.push(
+              '/learning'); // router에서 learning페이지로 이동하면 chatProvider의 isLearning를 true로 바꾸도록 설정했음.
           context.push('/subject', extra: 'AI 학습');
         },
         child: const SizedBox(

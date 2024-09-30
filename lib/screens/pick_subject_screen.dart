@@ -6,9 +6,9 @@ import 'package:flutter_interview/providers/pick_subject_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class PickSubject extends StatelessWidget {
+class PickSubjectScreen extends StatelessWidget {
   final String subject;
-  const PickSubject({
+  const PickSubjectScreen({
     super.key,
     required this.subject,
   });
@@ -26,6 +26,12 @@ class PickSubject extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              context.read<ScrollControllerProvider>().setScrollController();
+              context.go('/home');
+            },
+            icon: Icon(Icons.arrow_back)),
         title: Text(subject),
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,

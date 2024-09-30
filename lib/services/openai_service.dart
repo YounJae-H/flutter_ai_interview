@@ -125,7 +125,6 @@ class OpenAIService {
     // 대화 종료: messages 리스트를 초기화하여 이전 대화 내역 삭제 (AI 맥락 파괴)
     messages.clear();
     answerMessages.clear();
-    // 종료 메시지를 원한다면 아래 내용을 추가
     messages.add({
       'role': 'system',
       'content': finalPrompt,

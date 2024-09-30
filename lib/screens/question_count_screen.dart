@@ -23,6 +23,12 @@ class QuestionCountScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              context.read<ScrollControllerProvider>().setScrollController();
+              context.pop();
+            },
+            icon: Icon(Icons.arrow_back)),
         title: Text(subject),
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,

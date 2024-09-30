@@ -62,7 +62,7 @@ class _ChatScreenState extends State<ChatScreen> {
           showDialog(
               context: context,
               builder: (_) {
-                return CustomDialog();
+                return const CustomDialog();
               });
         }
         return;

@@ -6,13 +6,13 @@ class PickSubjectProvider with ChangeNotifier {
     'Swift/iOS',
     'React',
     'ReactNative',
+    'Flutter/Dart',
     'Java',
     'JavaScript',
-    'React',
     'Spring',
-    'Unity',
+    'DataBase',
   ];
-  String _pickSubject = "Java";
+  String _pickSubject = 'Flutter/Dart';
   // String _subject = "Flutter";
 
   final TextEditingController _textEditingController = TextEditingController();

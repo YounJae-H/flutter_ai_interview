@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_interview/providers/chat_provider.dart';
+import 'package:flutter_interview/providers/scroll_controller_provider.dart';
 import 'package:flutter_interview/screens/archive_screen.dart';
 import 'package:flutter_interview/screens/chat_screen.dart';
 import 'package:flutter_interview/screens/home_screen.dart';
 import 'package:flutter_interview/screens/main_screen.dart';
 import 'package:flutter_interview/screens/learning_screen.dart';
-import 'package:flutter_interview/screens/pick_subject.dart';
+import 'package:flutter_interview/screens/pick_subject_screen.dart';
 import 'package:flutter_interview/screens/profile_screen.dart';
 import 'package:flutter_interview/screens/question_count_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -24,12 +25,12 @@ final router = GoRouter(
         GoRoute(
           path: '/home',
           pageBuilder: (context, state) {
-            // NoTransitionPage => 전환 애니메이션 제거
-            // 화면 전환시 깜빡이는 문제 해결하기 위해서
-            // 페이지 전환 애니메이션 주거나 제거 해야함.
             WidgetsBinding.instance.addPostFrameCallback((_) {
               context.read<ChatProvider>().setIsLearning(false);
             });
+            // NoTransitionPage => 전환 애니메이션 제거
+            // 화면 전환시 깜빡이는 문제 해결하기 위해서
+            // 페이지 전환 애니메이션 주거나 제거 해야함.
             return const NoTransitionPage(child: HomeScreen());
           },
         ),
@@ -66,7 +67,7 @@ final router = GoRouter(
         //   context.read<ScrollControllerProvider>().setScrollController();
         // });
 
-        return PickSubject(subject: subject);
+        return PickSubjectScreen(subject: subject);
       },
     ),
     GoRoute(

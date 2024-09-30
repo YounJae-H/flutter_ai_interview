@@ -14,7 +14,7 @@ class ChatProvider with ChangeNotifier {
   bool _isFirstMessage = true; // ai 생성시 첫 응답이 오기까지 화면 중앙에 로딩창을 보여주기 위함.
   bool _isEnded = false; // 면접이 종료되었는지 확인.
   bool _isLearning = false; // 학습 페이지인지 아닌지 확인.
-  String answerRespone = "";
+  String answerRespone = ""; // AI 학습을 위한 응답 저장.
 
   int get questionCount => _questionCount;
   List<String> get difficulty => _difficulty;
@@ -30,10 +30,6 @@ class ChatProvider with ChangeNotifier {
 
   ChatProvider(this._subject)
       : _openAIService = OpenAIService(subject: _subject);
-
-  Future<void> answerMessage(String message) async {
-    _addMessage(message, isUser: true);
-  }
 
   Future<void> sendMessage(String message) async {
     if (_isTyping) return;
@@ -135,7 +131,7 @@ class ChatProvider with ChangeNotifier {
     // 대화 종료: messages 리스트를 초기화하여 이전 대화 내역 삭제 (화면에 표시하는 대회 내역 삭제)
     _messages.clear(); // 화면 표시 대화 내역 삭제
     _openAIService.endConversation(); //OpenAI 기존 맥락 파괴 후 초기화
-    answerRespone = "";
+    answerRespone = ""; // Ai 학습 응답 초기화
     _setIsFirstMessage(true); // 모델 생성시 첫 메시지 응답이 오는 동안 로딩창을 보여주기 위함
     _isEnded = false; // 면접 종료 여부
     notifyListeners();
