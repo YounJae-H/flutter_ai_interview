@@ -20,73 +20,70 @@ class BuildMessageContent extends StatelessWidget {
     final chatProvider = context.read<ChatProvider>();
     final isLoading = chatProvider.isLoading;
     final isLastMessage =
-        index == chatProvider.messages.length - 1; // 마지막 메시지 확인
+        index == chatProvider.messages.length - 1; // 유저 마지막 메시지 확인
     double screenWidth = MediaQuery.of(context).size.width * 0.6;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: isLoading && isLastMessage
           ? [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 4.0),
-                child: Container(
-                  constraints: BoxConstraints(maxWidth: screenWidth),
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.yellow,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    message,
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 16.0,
-                width: 16.0,
-                child: CircularProgressIndicator(
-                  strokeWidth: 1.6,
-                ),
-              )
+              _buildUserMessage(message: message, screenWidth: screenWidth),
+              _buildLoadingIndicator(),
             ]
           : !isUser
-              ? lines.map((line) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 4.0),
-                    child: Container(
-                      constraints: BoxConstraints(maxWidth: screenWidth),
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color:
-                            line.contains('정답입니다！') ? Colors.red : Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        line,
-                        style: line.contains('정답입니다！')
-                            ? TextStyle(color: Colors.white)
-                            : TextStyle(color: Colors.black),
-                      ),
-                    ),
-                  );
-                }).toList()
-              : [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 4.0),
-                    child: Container(
-                      constraints: BoxConstraints(maxWidth: screenWidth),
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.yellow,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        message,
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                  ),
-                ],
+              ? _buildBotMessage(lines: lines, screenWidth: screenWidth)
+              : [_buildUserMessage(message: message, screenWidth: screenWidth)],
     );
+  }
+
+  Widget _buildUserMessage(
+      {required String message, required double screenWidth}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4.0),
+      child: Container(
+        constraints: BoxConstraints(maxWidth: screenWidth),
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.yellow,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Text(
+          message,
+          style: TextStyle(color: Colors.black),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingIndicator() {
+    return const SizedBox(
+      height: 16.0,
+      width: 16.0,
+      child: CircularProgressIndicator(
+        strokeWidth: 1.6,
+      ),
+    );
+  }
+
+  List<Widget> _buildBotMessage(
+      {required Iterable<String> lines, required double screenWidth}) {
+    return lines.map((line) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 4.0),
+        child: Container(
+          constraints: BoxConstraints(maxWidth: screenWidth),
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: line.contains('정답입니다！') ? Colors.red : Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text(
+            line,
+            style: line.contains('정답입니다！')
+                ? TextStyle(color: Colors.white)
+                : TextStyle(color: Colors.black),
+          ),
+        ),
+      );
+    }).toList();
   }
 }

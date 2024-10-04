@@ -4,8 +4,9 @@ import 'package:flutter_interview/services/openai_service.dart';
 
 class ChatProvider with ChangeNotifier {
   final List<ChatMessage> _messages = [];
+  final List<List<ChatMessage>> _saveMessages = [];
   late final OpenAIService _openAIService;
-  final List<String> _difficulty = ['최하', '하', '중', '상', '최상'];
+  final List<String> _difficultyLevels = ['최하', '하', '중', '상', '최상'];
   String _selectedDifficulty = '중';
   String _subject;
   int _questionCount = 6; // 질문 개수 초기값
@@ -14,19 +15,22 @@ class ChatProvider with ChangeNotifier {
   bool _isFirstMessage = true; // ai 생성시 첫 응답이 오기까지 화면 중앙에 로딩창을 보여주기 위함.
   bool _isEnded = false; // 면접이 종료되었는지 확인.
   bool _isLearning = false; // 학습 페이지인지 아닌지 확인.
-  String answerRespone = ""; // AI 학습을 위한 응답 저장.
+  String answerResponse = ""; // AI 학습을 위한 응답 저장.
+  bool _hasSaved = false; // 세이브 여부 상태 추가
 
   int get questionCount => _questionCount;
-  List<String> get difficulty => _difficulty;
+  List<String> get difficultyLevels => _difficultyLevels;
   String get selectedDifficulty => _selectedDifficulty;
   String get subject => _subject;
 
   List<ChatMessage> get messages => _messages;
+  List<List<ChatMessage>> get saveMessages => _saveMessages;
   bool get isTyping => _isTyping;
   bool get isLoading => _isLoading;
   bool get isFirstMessage => _isFirstMessage;
   bool get isEnded => _isEnded;
   bool get isLearning => _isLearning;
+  bool get hasSaved => _hasSaved; // 세이브 여부를 반환하는 getter
 
   ChatProvider(this._subject)
       : _openAIService = OpenAIService(subject: _subject);
@@ -45,7 +49,7 @@ class ChatProvider with ChangeNotifier {
         (message.contains('오답') && message.length < 10))) {
       response = await _openAIService.createModel(message);
       if (_isLearning) {
-        answerRespone = await _openAIService.createAnswerModel(response);
+        answerResponse = await _openAIService.createAnswerModel(response);
       }
 
       _setLoadingState(false);
@@ -53,8 +57,8 @@ class ChatProvider with ChangeNotifier {
 
       await _displayAssistantMessage(response);
 
-      checkForEndInterview();
       _setTypingState(false);
+      checkForEndInterview();
 
       return;
     } else {
@@ -67,8 +71,8 @@ class ChatProvider with ChangeNotifier {
       // await _displayAssistantMessage('다시 질문 드리겠습니다.');
       await _displayAssistantMessage(response2);
 
-      checkForEndInterview();
       _setTypingState(false);
+      checkForEndInterview();
 
       return;
     }
@@ -80,21 +84,22 @@ class ChatProvider with ChangeNotifier {
   }
 
   Future<void> _displayAssistantMessage(String message) async {
-    //message
     final lines = message.split('\n').where((line) => line.trim().isNotEmpty);
-
     for (String line in lines) {
       final index = _messages.length;
       _addMessage('', isUser: false);
-
-      for (int i = 0; i < line.length; i++) {
-        await Future.delayed(const Duration(milliseconds: 2));
-        _messages[index] =
-            ChatMessage(message: line.substring(0, i + 1), isUser: false);
-        notifyListeners();
-      }
-      await Future.delayed(const Duration(milliseconds: 10));
+      await _animateAssistantResponse(line, index);
     }
+  }
+
+  Future<void> _animateAssistantResponse(String line, int index) async {
+    for (int i = 0; i < line.length; i++) {
+      await Future.delayed(const Duration(milliseconds: 2));
+      _messages[index] =
+          ChatMessage(message: line.substring(0, i + 1), isUser: false);
+      notifyListeners();
+    }
+    await Future.delayed(const Duration(milliseconds: 10));
   }
 
   void _setTypingState(bool isTyping) {
@@ -131,8 +136,9 @@ class ChatProvider with ChangeNotifier {
     // 대화 종료: messages 리스트를 초기화하여 이전 대화 내역 삭제 (화면에 표시하는 대회 내역 삭제)
     _messages.clear(); // 화면 표시 대화 내역 삭제
     _openAIService.endConversation(); //OpenAI 기존 맥락 파괴 후 초기화
-    answerRespone = ""; // Ai 학습 응답 초기화
+    answerResponse = ""; // Ai 학습 응답 초기화
     _setIsFirstMessage(true); // 모델 생성시 첫 메시지 응답이 오는 동안 로딩창을 보여주기 위함
+    _hasSaved = false; // save 여부
     _isEnded = false; // 면접 종료 여부
     notifyListeners();
   }
@@ -150,6 +156,23 @@ class ChatProvider with ChangeNotifier {
   void setSubject(String newValue) {
     _subject = newValue;
     _openAIService.setSubject(_subject);
+    notifyListeners();
+  }
+
+  void save() {
+    final messagesToSave = _messages;
+    messagesToSave.removeAt(0);
+    _saveMessages.add(List<ChatMessage>.from(messagesToSave));
+    _hasSaved = true; // 세이브 후 상태 변경
+    notifyListeners();
+  }
+
+  List<ChatMessage> getSavedMessages(int index) {
+    return _saveMessages.elementAt(index).toList();
+  }
+
+  void deleteSavedMessages(int index) {
+    _saveMessages.removeAt(index);
     notifyListeners();
   }
 

@@ -28,7 +28,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     // 텍스트 필드의 내용이 변경될 때마다 Listener가 실행
     _textEditingController.addListener(() {
-      // 텍스트 필드 내의 내용이 있는지 확인. 비어 있으면 true 반환
+      // 텍스트 필드 내의 내용이 있는지 확인. 비어 있으면 false 반환
       _isSendButtonEnabled.value = _textEditingController.text.isEmpty;
       _updateKeyboardHeight();
     });
@@ -44,12 +44,12 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _updateKeyboardHeight() {
     double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-    Provider.of<KeyboardProvider>(context, listen: false)
-        .updateKeyboardHeight(keyboardHeight);
+    context.read<KeyboardProvider>().updateKeyboardHeight(keyboardHeight);
   }
 
   @override
   Widget build(BuildContext context) {
+    final chatProvider = context.read<ChatProvider>();
     final isFirstLoading = context.watch<ChatProvider>().isFirstMessage;
     final isTyping = context.read<ChatProvider>().isTyping;
     final isLearning = context.read<ChatProvider>().isLearning;
@@ -70,6 +70,13 @@ class _ChatScreenState extends State<ChatScreen> {
       child: Scaffold(
         backgroundColor: Color(0xFFBACEE0),
         appBar: AppBar(
+          actions: [
+            IconButton(
+                onPressed: chatProvider.isEnded && !chatProvider.hasSaved
+                    ? () => context.read<ChatProvider>().save()
+                    : null,
+                icon: Icon(Icons.save))
+          ],
           title: Text(widget.subject),
           backgroundColor: Color(0xFFBACEE0),
           surfaceTintColor: Color(0xFFBACEE0),
@@ -134,7 +141,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void _answerSendPressed() {
     final chatProvider = context.read<ChatProvider>();
     final isLearning = context.read<ChatProvider>().isLearning;
-    final answerRespone = context.read<ChatProvider>().answerRespone;
+    final answerRespone = context.read<ChatProvider>().answerResponse;
 
     if (isLearning) chatProvider.sendMessage(answerRespone);
 

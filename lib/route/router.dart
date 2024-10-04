@@ -49,7 +49,7 @@ final router = GoRouter(
         GoRoute(
           path: '/archive',
           pageBuilder: (context, state) =>
-              const NoTransitionPage(child: ArchiveScreen()),
+              NoTransitionPage(child: ArchiveScreen()),
         ),
         GoRoute(
           path: '/profile',

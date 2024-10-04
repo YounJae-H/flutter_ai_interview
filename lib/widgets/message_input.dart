@@ -19,8 +19,12 @@ class BuildMessageInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isTyping = context.watch<ChatProvider>().isTyping;
-    final isEnded = context.watch<ChatProvider>().isEnded;
+    // 상태 값 가져오기
+    final chatProvider = context.watch<ChatProvider>();
+    final isTyping = chatProvider.isTyping;
+    final isEnded = chatProvider.isEnded;
+
+    // UI에 필요한 크기 계산
     final containerHeight = MediaQuery.of(context).size.height / 15;
     final keyboardHeight =
         Provider.of<KeyboardProvider>(context).keyboardHeight;
@@ -29,7 +33,9 @@ class BuildMessageInput extends StatelessWidget {
       child: Container(
         color: Colors.white,
         constraints: BoxConstraints(
-            minHeight: containerHeight, maxHeight: double.infinity),
+          minHeight: containerHeight,
+          maxHeight: double.infinity,
+        ),
         child: Padding(
           padding: EdgeInsets.only(
             left: 8.0,
@@ -37,65 +43,69 @@ class BuildMessageInput extends StatelessWidget {
             bottom: keyboardHeight / 1000, // 키보드 높이만큼 패딩 추가
           ),
           child: Row(
-            crossAxisAlignment:
-                CrossAxisAlignment.end, // IconButton을 항상 우측 하단에 두기 위함
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Expanded(
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxHeight: 180),
-                    child: TextField(
-                      controller: controller,
-                      keyboardType: TextInputType.multiline,
-                      minLines: 1,
-                      maxLines: null,
-                      textInputAction: TextInputAction.newline,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        errorBorder: InputBorder.none,
-                      ),
-                      enabled: !isEnded, // 면접이 종료되면 텍스트 필드 비활성화
-
-                      // onSubmitted: isTyping ? null : onSubmitted,
-                      onSubmitted: null,
-                    ),
-                  ),
-                ),
-              ),
-
-              // _isSendButtonEnabled의 값이 변경되면 UI 재구성
-              ValueListenableBuilder<bool>(
-                valueListenable: isSendButtonEnabled,
-                builder: (BuildContext context, bool isEnabled, Widget? child) {
-                  final isBoolean = isTyping || isEnded || isEnabled;
-                  return SizedBox(
-                    height: containerHeight,
-                    width: containerHeight,
-                    child: IconButton(
-                      icon: const Icon(Icons.send),
-                      iconSize: 35.0,
-                      color: Colors.grey,
-                      style: isBoolean
-                          ? null
-                          : IconButton.styleFrom(
-                              foregroundColor: Colors.black,
-                              backgroundColor: Colors.yellow,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(0),
-                              ),
-                            ),
-                      onPressed: isBoolean ? () {} : onPressed,
-                    ),
-                  );
-                },
-              ),
+              _buildTextField(isEnded),
+              _buildSendButton(isTyping, isEnded, containerHeight),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildTextField(bool isEnded) {
+    return Expanded(
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxHeight: 180),
+          child: TextField(
+            controller: controller,
+            keyboardType: TextInputType.multiline,
+            minLines: 1,
+            maxLines: null,
+            textInputAction: TextInputAction.newline,
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              errorBorder: InputBorder.none,
+            ),
+            enabled: !isEnded, // 면접이 종료되면 텍스트 필드 비활성화
+            onSubmitted: null,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSendButton(bool isTyping, bool isEnded, double containerHeight) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: isSendButtonEnabled,
+      builder: (BuildContext context, bool isEnabled, Widget? child) {
+        final isButtonEnabled = isTyping || isEnded || isEnabled;
+
+        return SizedBox(
+          height: containerHeight,
+          width: containerHeight,
+          child: IconButton(
+            icon: const Icon(Icons.send),
+            iconSize: 35.0,
+            color: Colors.grey,
+            style: isButtonEnabled
+                ? null
+                : IconButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    backgroundColor: Colors.yellow,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0),
+                    ),
+                  ),
+            onPressed: isButtonEnabled ? () {} : onPressed,
+          ),
+        );
+      },
     );
   }
 }
