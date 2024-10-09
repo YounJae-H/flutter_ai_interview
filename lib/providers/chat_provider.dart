@@ -133,6 +133,7 @@ class ChatProvider with ChangeNotifier {
   }
 
   void endInterview() {
+    save();
     // 대화 종료: messages 리스트를 초기화하여 이전 대화 내역 삭제 (화면에 표시하는 대회 내역 삭제)
     _messages.clear(); // 화면 표시 대화 내역 삭제
     _openAIService.endConversation(); //OpenAI 기존 맥락 파괴 후 초기화

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview/color/colors.dart';
 import 'package:flutter_interview/providers/chat_provider.dart';
 import 'package:flutter_interview/providers/keyboard_provider.dart';
 import 'package:flutter_interview/component/custom_dialog.dart';
@@ -28,7 +29,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     // 텍스트 필드의 내용이 변경될 때마다 Listener가 실행
     _textEditingController.addListener(() {
-      // 텍스트 필드 내의 내용이 있는지 확인. 비어 있으면 false 반환
+      // 텍스트 필드 내의 내용이 있는지 확인. 비어 있으면 true 반환
       _isSendButtonEnabled.value = _textEditingController.text.isEmpty;
       _updateKeyboardHeight();
     });
@@ -51,9 +52,9 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     final chatProvider = context.read<ChatProvider>();
     final isFirstLoading = context.watch<ChatProvider>().isFirstMessage;
-    final isTyping = context.read<ChatProvider>().isTyping;
-    final isLearning = context.read<ChatProvider>().isLearning;
-    // final isEnded = context.read<ChatProvider>().isEnded;
+    final isTyping = chatProvider.isTyping;
+    final isLearning = chatProvider.isLearning;
+    // final isEnded = chatProvider.isEnded;
 
     return PopScope(
       canPop: false, // 뒤로가기 비활성화
@@ -68,18 +69,11 @@ class _ChatScreenState extends State<ChatScreen> {
         return;
       },
       child: Scaffold(
-        backgroundColor: Color(0xFFBACEE0),
+        backgroundColor: chatScreenColor,
         appBar: AppBar(
-          actions: [
-            IconButton(
-                onPressed: chatProvider.isEnded && !chatProvider.hasSaved
-                    ? () => context.read<ChatProvider>().save()
-                    : null,
-                icon: Icon(Icons.save))
-          ],
           title: Text(widget.subject),
-          backgroundColor: Color(0xFFBACEE0),
-          surfaceTintColor: Color(0xFFBACEE0),
+          backgroundColor: chatScreenColor,
+          surfaceTintColor: chatScreenColor,
           titleSpacing: 0,
         ),
         body: GestureDetector(

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_interview/models/chat_message.dart';
 import 'package:flutter_interview/providers/chat_provider.dart';
-import 'package:flutter_interview/providers/scroll_controller_provider.dart';
 import 'package:flutter_interview/screens/archive_screen.dart';
 import 'package:flutter_interview/screens/chat_screen.dart';
 import 'package:flutter_interview/screens/home_screen.dart';
@@ -88,6 +88,22 @@ final router = GoRouter(
         final subject =
             state.extra != null ? state.extra.toString() : 'Unknown Subject';
         return ChatScreen(subject: subject);
+      },
+    ),
+    GoRoute(
+      path: '/save',
+      builder: (context, state) {
+        // state.extra를 List로 캐스팅
+        final args = state.extra as List;
+        final List<ChatMessage> savedMessages =
+            args[0] != null ? args[0] as List<ChatMessage> : [];
+        final String title =
+            args[1] != null ? args[1].toString() : 'Unknown Subject';
+
+        return MessageList(
+          savedMessages: savedMessages,
+          title: title,
+        );
       },
     ),
   ],

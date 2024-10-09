@@ -26,10 +26,12 @@ class MainBanner extends StatelessWidget {
           InterviewItem(
             title: 'Flutter/Dart',
             onPressed: () => context.push('/question', extra: 'Flutter/Dart'),
+            buttonEnable: true,
           ),
           InterviewItem(
             title: '주제 설정',
             onPressed: () => context.push('/subject', extra: '주제 설정'),
+            buttonEnable: true,
           ),
         ],
       ),

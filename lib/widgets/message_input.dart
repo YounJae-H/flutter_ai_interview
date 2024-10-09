@@ -26,8 +26,7 @@ class BuildMessageInput extends StatelessWidget {
 
     // UI에 필요한 크기 계산
     final containerHeight = MediaQuery.of(context).size.height / 15;
-    final keyboardHeight =
-        Provider.of<KeyboardProvider>(context).keyboardHeight;
+    final keyboardHeight = context.watch<KeyboardProvider>().keyboardHeight;
 
     return SafeArea(
       child: Container(

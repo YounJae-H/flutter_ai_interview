@@ -56,6 +56,7 @@ class CustomDialog extends StatelessWidget {
                           context
                               .read<ScrollControllerProvider>()
                               .setScrollController();
+
                           context.go('/home');
                         },
                         style: ElevatedButton.styleFrom(
