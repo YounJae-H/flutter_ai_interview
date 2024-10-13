@@ -17,10 +17,12 @@ class ArchiveScreen extends StatelessWidget {
     return ListView.builder(
       itemCount: chatProvider.saveMessages.length,
       itemBuilder: (context, index) {
+        final int getReverseListIndex =
+            chatProvider.saveMessages.length - 1 - index; //데이터를 역순으로 가져오기 위함
         final List<ChatMessage> savedMessages =
-            chatProvider.getSavedMessages(index);
-        final String title = '면접 기록 ${index + 1}';
+            chatProvider.getSavedMessages(getReverseListIndex);
 
+        final String title = '면접 기록 ${getReverseListIndex + 1}';
         return Column(
           children: [
             Card(
@@ -29,8 +31,7 @@ class ArchiveScreen extends StatelessWidget {
                 child: InterviewItem(
                   title: title,
                   onPressed: () {
-                    context.push('/save',
-                        extra: [savedMessages, title] as List);
+                    context.push('/save', extra: [savedMessages, title]);
                   },
                   buttonEnable: false,
                 ))

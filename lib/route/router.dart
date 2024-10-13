@@ -94,11 +94,11 @@ final router = GoRouter(
       path: '/save',
       builder: (context, state) {
         // state.extra를 List로 캐스팅
-        final args = state.extra as List;
+        final extra = state.extra as List;
         final List<ChatMessage> savedMessages =
-            args[0] != null ? args[0] as List<ChatMessage> : [];
+            extra[0] != null ? extra[0] as List<ChatMessage> : [];
         final String title =
-            args[1] != null ? args[1].toString() : 'Unknown Subject';
+            extra[1] != null ? extra[1] as String : 'Unknown Title';
 
         return MessageList(
           savedMessages: savedMessages,

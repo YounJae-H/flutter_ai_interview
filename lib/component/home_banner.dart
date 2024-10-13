@@ -13,9 +13,11 @@ class MainBanner extends StatelessWidget {
       elevation: 5,
       color: Colors.white,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            child: const Text(
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            child: Text(
               "AI 면접",
               style: TextStyle(
                   fontSize: 20.0,

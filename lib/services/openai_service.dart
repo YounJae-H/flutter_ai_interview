@@ -9,6 +9,7 @@ class OpenAIService {
   String subject;
   // 프롬프트를 동적으로 설정
   String get finalPrompt => Env.prompt.replaceAll('#subject', subject);
+
   OpenAIService({required this.subject}) {
     // 시스템 메시지를 초기화 시에 설정
     messages.add({
@@ -32,7 +33,6 @@ class OpenAIService {
     const String apiUrl = 'https://api.openai.com/v1/chat/completions';
 
     // 사용자의 새로운 메시지를 messages 리스트에 추가
-
     messages.add({
       'role': 'user',
       'content': sendMessage,
@@ -78,8 +78,7 @@ class OpenAIService {
     const String apiKey = Env.apiKey;
     const String apiUrl = 'https://api.openai.com/v1/chat/completions';
 
-    // 사용자의 새로운 메시지를 messages 리스트에 추가
-
+    // AI의 새로운 메시지를 answerMessages 리스트에 추가
     answerMessages.add({
       'role': 'user',
       'content': sendMessage,
