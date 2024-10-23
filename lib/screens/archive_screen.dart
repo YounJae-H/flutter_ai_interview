@@ -6,6 +6,7 @@ import 'package:flutter_interview/providers/chat_provider.dart';
 import 'package:flutter_interview/widgets/message_item.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ArchiveScreen extends StatelessWidget {
   const ArchiveScreen({super.key});
@@ -14,31 +15,64 @@ class ArchiveScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final chatProvider = context.watch<ChatProvider>();
 
-    return ListView.builder(
-      itemCount: chatProvider.saveMessages.length,
-      itemBuilder: (context, index) {
-        final int getReverseListIndex =
-            chatProvider.saveMessages.length - 1 - index; //데이터를 역순으로 가져오기 위함
-        final List<ChatMessage> savedMessages =
-            chatProvider.getSavedMessages(getReverseListIndex);
+    return FutureBuilder<int>(
+        future: getMessageCount(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator()); // 로딩 중일 때
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}')); // 오류 발생 시
+          } else if (!snapshot.hasData) {
+            return const Center(child: Text('저장된 면접 기록이 없습니다.')); // 메시지가 없을 때
+          } else {
+            final messageCount = snapshot.data!;
+            return ListView.builder(
+              itemCount: messageCount,
+              itemBuilder: (context, index) {
+                final int getReverseListIndex = messageCount - index; // 역순
+                return FutureBuilder<List<ChatMessage>>(
+                  future: chatProvider
+                      .getSavedMessages(getReverseListIndex), // Index 전달
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container();
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(child: Text('면접 기록이 저장되지 않았습니다.'));
+                    } else {
+                      final savedMessages = snapshot.data!;
+                      final String title = '면접 기록 $getReverseListIndex';
 
-        final String title = '면접 기록 ${getReverseListIndex + 1}';
-        return Column(
-          children: [
-            Card(
-                elevation: 5,
-                color: Colors.white,
-                child: InterviewItem(
-                  title: title,
-                  onPressed: () {
-                    context.push('/save', extra: [savedMessages, title]);
+                      return Column(
+                        children: [
+                          Card(
+                            elevation: 5,
+                            color: Colors.white,
+                            child: InterviewItem(
+                              title: title,
+                              onPressed: () {
+                                context.push('/save',
+                                    extra: [savedMessages, title]);
+                              },
+                              buttonEnable: false,
+                            ),
+                          ),
+                        ],
+                      );
+                    }
                   },
-                  buttonEnable: false,
-                ))
-          ],
-        );
-      },
-    );
+                );
+              },
+            );
+          }
+        });
+  }
+
+  Future<int> getMessageCount() async {
+    final response = await Supabase.instance.client.from('chatMessage').count();
+
+    return response; // 데이터가 없을 경우 0을 반환
   }
 }
 

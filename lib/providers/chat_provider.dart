@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_interview/models/chat_message.dart';
 import 'package:flutter_interview/services/openai_service.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ChatProvider with ChangeNotifier {
   final List<ChatMessage> _messages = [];
@@ -160,16 +163,45 @@ class ChatProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void save() {
+  // void save() {
+  //   final messagesToSave = _messages;
+  //   messagesToSave.removeAt(0);
+  //   _saveMessages.add(List<ChatMessage>.from(messagesToSave));
+  //   _hasSaved = true; // 세이브 후 상태 변경
+  //   notifyListeners();
+  // }
+  Future<void> save() async {
     final messagesToSave = _messages;
-    messagesToSave.removeAt(0);
-    _saveMessages.add(List<ChatMessage>.from(messagesToSave));
-    _hasSaved = true; // 세이브 후 상태 변경
+    messagesToSave.removeAt(0); // 필요에 따라 첫 번째 메시지를 제외
+    _saveMessages.add(List<ChatMessage>.from(messagesToSave)); //로컬에 저장
+
+    final response = await Supabase.instance.client // Supabase에 저장
+        .from('chatMessage') // Supabase에 생성한 테이블 이름
+        .insert({
+      'message': messagesToSave.map((m) => m.toMap()).toList(), // 메시지 내용을 변환
+      'created_at': DateTime.now().toIso8601String(), // 생성 시간
+    });
+
+    _hasSaved = true;
+
     notifyListeners();
   }
 
-  List<ChatMessage> getSavedMessages(int index) {
-    return _saveMessages.elementAt(index).toList();
+  // List<ChatMessage> getSavedMessages(int index) {
+  //   return _saveMessages.elementAt(index).toList();
+  // }
+
+  Future<List<ChatMessage>> getSavedMessages(int index) async {
+    final response = await Supabase.instance.client
+        .from('chatMessage')
+        .select('message')
+        .eq('id', index);
+
+    // 데이터 처리
+    final jsonString = response[0]['message'] as String;
+    final List<dynamic> data = jsonDecode(jsonString);
+    final messages = data.map((json) => ChatMessage.fromMap(json)).toList();
+    return messages;
   }
 
   void deleteSavedMessages(int index) {

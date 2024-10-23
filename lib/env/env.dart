@@ -16,4 +16,10 @@ abstract class Env {
 
   @EnviedField(varName: 'ANSWER_PROMPT', obfuscate: false)
   static const String answerPrompt = _Env.answerPrompt;
+
+  @EnviedField(varName: 'SUPABASE_URL')
+  static const String supabaseURL = _Env.supabaseURL;
+
+  @EnviedField(varName: 'SUPABASE_ANON_KEY')
+  static const String supabaseAnonKey = _Env.supabaseAnonKey;
 }

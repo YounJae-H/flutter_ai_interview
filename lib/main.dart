@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_interview/env/env.dart';
 import 'package:flutter_interview/providers/bottom_navigation_provider.dart';
 import 'package:flutter_interview/providers/chat_provider.dart';
 import 'package:flutter_interview/providers/keyboard_provider.dart';
@@ -6,8 +7,16 @@ import 'package:flutter_interview/providers/scroll_controller_provider.dart';
 import 'package:flutter_interview/providers/pick_subject_provider.dart';
 import 'package:flutter_interview/route/router.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Supabase.initialize(
+    url: Env.supabaseURL,
+    anonKey: Env.supabaseAnonKey,
+  );
+
   runApp(
     const _App(),
   );
