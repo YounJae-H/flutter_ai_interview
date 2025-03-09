@@ -15,7 +15,8 @@ class ArchiveScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final chatProvider = context.watch<ChatProvider>();
 
-    return FutureBuilder<int>(
+    return FutureBuilder<Map<String, dynamic>>(
+        // ListView.builder itemCount에 직접 비동기 작업을 할 수 없기 때문에 FutureBuilder 사용해서 가져오는 것.
         future: getMessageCount(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -25,14 +26,16 @@ class ArchiveScreen extends StatelessWidget {
           } else if (!snapshot.hasData) {
             return const Center(child: Text('저장된 면접 기록이 없습니다.')); // 메시지가 없을 때
           } else {
-            final messageCount = snapshot.data!;
+            final messageCount = snapshot.data!['count'];
+            final userId = snapshot.data!['userId'];
+
             return ListView.builder(
               itemCount: messageCount,
               itemBuilder: (context, index) {
-                final int getReverseListIndex = messageCount - index; // 역순
-                return FutureBuilder<List<ChatMessage>>(
-                  future: chatProvider
-                      .getSavedMessages(getReverseListIndex), // Index 전달
+                final int getReverseListIndex =
+                    messageCount - index; // 리스트 역순 배치
+                return FutureBuilder<Map<String, dynamic>>(
+                  future: chatProvider.getSavedMessages(userId, index),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Container();
@@ -41,7 +44,9 @@ class ArchiveScreen extends StatelessWidget {
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return const Center(child: Text('면접 기록이 저장되지 않았습니다.'));
                     } else {
-                      final savedMessages = snapshot.data!;
+                      final savedMessages = snapshot.data!['messages'];
+                      final savedTime = snapshot.data!['time'];
+
                       final String title = '면접 기록 $getReverseListIndex';
 
                       return Column(
@@ -51,6 +56,7 @@ class ArchiveScreen extends StatelessWidget {
                             color: Colors.white,
                             child: InterviewItem(
                               title: title,
+                              createdAt: savedTime,
                               onPressed: () {
                                 context.push('/save',
                                     extra: [savedMessages, title]);
@@ -69,10 +75,15 @@ class ArchiveScreen extends StatelessWidget {
         });
   }
 
-  Future<int> getMessageCount() async {
-    final response = await Supabase.instance.client.from('chatMessage').count();
+  Future<Map<String, dynamic>> getMessageCount() async {
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    final response = await Supabase.instance.client
+        .from('chatMessage')
+        .select('*')
+        .eq('author', userId!)
+        .count();
 
-    return response; // 데이터가 없을 경우 0을 반환
+    return {'count': response.count, 'userId': userId};
   }
 }
 

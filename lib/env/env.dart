@@ -22,4 +22,7 @@ abstract class Env {
 
   @EnviedField(varName: 'SUPABASE_ANON_KEY')
   static const String supabaseAnonKey = _Env.supabaseAnonKey;
+
+  @EnviedField(varName: 'SERVER_CLIENT_ID')
+  static const String serverClientId = _Env.serverClientId;
 }

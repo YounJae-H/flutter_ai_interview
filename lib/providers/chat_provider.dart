@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_interview/models/chat_message.dart';
 import 'package:flutter_interview/services/openai_service.dart';
@@ -171,6 +170,7 @@ class ChatProvider with ChangeNotifier {
   //   notifyListeners();
   // }
   Future<void> save() async {
+    final author = Supabase.instance.client.auth.currentUser?.id;
     final messagesToSave = _messages;
     messagesToSave.removeAt(0); // 필요에 따라 첫 번째 메시지를 제외
     _saveMessages.add(List<ChatMessage>.from(messagesToSave)); //로컬에 저장
@@ -178,6 +178,7 @@ class ChatProvider with ChangeNotifier {
     final response = await Supabase.instance.client // Supabase에 저장
         .from('chatMessage') // Supabase에 생성한 테이블 이름
         .insert({
+      'author': author,
       'message': messagesToSave.map((m) => m.toMap()).toList(), // 메시지 내용을 변환
       'created_at': DateTime.now().toIso8601String(), // 생성 시간
     });
@@ -191,17 +192,24 @@ class ChatProvider with ChangeNotifier {
   //   return _saveMessages.elementAt(index).toList();
   // }
 
-  Future<List<ChatMessage>> getSavedMessages(int index) async {
+  Future<Map<String, dynamic>> getSavedMessages(
+      String userId, int index) async {
     final response = await Supabase.instance.client
         .from('chatMessage')
-        .select('message')
-        .eq('id', index);
+        .select('message, created_at')
+        .eq('author', userId)
+        .order('created_at', ascending: false);
 
-    // 데이터 처리
-    final jsonString = response[0]['message'] as String;
+    // 날짜 변환
+    final time = response[index]['created_at'] as String;
+
+    // 메시지 처리
+
+    final jsonString = response[index]['message'] as String;
     final List<dynamic> data = jsonDecode(jsonString);
     final messages = data.map((json) => ChatMessage.fromMap(json)).toList();
-    return messages;
+
+    return {'messages': messages, 'time': time};
   }
 
   void deleteSavedMessages(int index) {

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_interview/models/chat_message.dart';
 import 'package:flutter_interview/providers/chat_provider.dart';
 import 'package:flutter_interview/screens/archive_screen.dart';
+import 'package:flutter_interview/screens/auth_screen.dart';
 import 'package:flutter_interview/screens/chat_screen.dart';
 import 'package:flutter_interview/screens/home_screen.dart';
 import 'package:flutter_interview/screens/main_screen.dart';
@@ -14,7 +15,7 @@ import 'package:provider/provider.dart';
 
 // OpenAIService _openAIService = OpenAIService();
 final router = GoRouter(
-  initialLocation: '/home',
+  initialLocation: '/auth',
   routes: [
     ShellRoute(
       // ShellRoute는 탭 네비게이션을 유지하는 데 적합
@@ -58,6 +59,11 @@ final router = GoRouter(
         ),
       ],
     ),
+    GoRoute(
+        path: '/auth',
+        builder: (context, state) {
+          return AuthScreen();
+        }),
     GoRoute(
       path: '/subject',
       builder: (context, state) {

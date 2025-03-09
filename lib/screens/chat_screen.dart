@@ -85,16 +85,12 @@ class _ChatScreenState extends State<ChatScreen> {
                 return Column(
                   children: [
                     Expanded(
-                      child: Stack(
-                        children: [
-                          isFirstLoading // ai의 첫 응답이 올때까지 대기
-                              ? const Center(child: CircularProgressIndicator())
-                              : BuildMessageList(
-                                  scrollController: _scrollController,
-                                  scrollToBottom: _scrollToBottom,
-                                ),
-                        ],
-                      ),
+                      child: isFirstLoading // ai의 첫 응답이 올때까지 대기
+                          ? const Center(child: CircularProgressIndicator())
+                          : BuildMessageList(
+                              scrollController: _scrollController,
+                              scrollToBottom: _scrollToBottom,
+                            ),
                     ),
                     !isLearning
                         ? BuildMessageInput(
