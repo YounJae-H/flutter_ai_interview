@@ -25,7 +25,7 @@ class AuthScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               const Text.rich(TextSpan(
-                  text: '\n\n\n\n\n면접과 학습을 한번에!\n',
+                  text: '\n\n\n\n\n\n면접과 학습을 한번에!\n',
                   style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
                   children: [
                     TextSpan(

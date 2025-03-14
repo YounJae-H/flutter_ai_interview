@@ -16,63 +16,66 @@ class ArchiveScreen extends StatelessWidget {
     final chatProvider = context.watch<ChatProvider>();
 
     return FutureBuilder<Map<String, dynamic>>(
-        // ListView.builder itemCount에 직접 비동기 작업을 할 수 없기 때문에 FutureBuilder 사용해서 가져오는 것.
-        future: getMessageCount(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator()); // 로딩 중일 때
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}')); // 오류 발생 시
-          } else if (!snapshot.hasData) {
-            return const Center(child: Text('저장된 면접 기록이 없습니다.')); // 메시지가 없을 때
-          } else {
-            final messageCount = snapshot.data!['count'];
-            final userId = snapshot.data!['userId'];
+      future: getMessageCount(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator()); // 로딩 중
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}')); // 오류 발생
+        } else if (!snapshot.hasData || snapshot.data!['count'] == 0) {
+          return const Center(child: Text('저장된 면접 기록이 없습니다.'));
+        } else {
+          final messageCount = snapshot.data!['count'];
+          final userId = snapshot.data!['userId'];
 
-            return ListView.builder(
-              itemCount: messageCount,
-              itemBuilder: (context, index) {
-                final int getReverseListIndex =
-                    messageCount - index; // 리스트 역순 배치
-                return FutureBuilder<Map<String, dynamic>>(
-                  future: chatProvider.getSavedMessages(userId, index),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Container();
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text('면접 기록이 저장되지 않았습니다.'));
-                    } else {
-                      final savedMessages = snapshot.data!['messages'];
-                      final savedTime = snapshot.data!['time'];
+          // 모든 메시지 데이터를 한 번에 로딩
+          return FutureBuilder<List<Map<String, dynamic>>>(
+            future: chatProvider.getAllSavedMessages(userId, messageCount),
+            builder: (context, allMessagesSnapshot) {
+              if (allMessagesSnapshot.connectionState ==
+                  ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (allMessagesSnapshot.hasError) {
+                return Center(
+                    child: Text('Error: ${allMessagesSnapshot.error}'));
+              } else if (!allMessagesSnapshot.hasData ||
+                  allMessagesSnapshot.data!.isEmpty) {
+                return const Center(child: Text('면접 기록이 저장되지 않았습니다.'));
+              } else {
+                final savedMessagesList = allMessagesSnapshot.data!;
 
-                      final String title = '면접 기록 $getReverseListIndex';
+                return ListView.builder(
+                  itemCount: savedMessagesList.length,
+                  itemBuilder: (context, index) {
+                    final savedMessages = savedMessagesList[index]['messages'];
+                    final savedTime = savedMessagesList[index]['time'];
+                    final String title = '면접 기록 ${messageCount - index}';
 
-                      return Column(
-                        children: [
-                          Card(
-                            elevation: 5,
-                            color: Colors.white,
-                            child: InterviewItem(
-                              title: title,
-                              createdAt: savedTime,
-                              onPressed: () {
-                                context.push('/save',
-                                    extra: [savedMessages, title]);
-                              },
-                              buttonEnable: false,
-                            ),
+                    return Column(
+                      children: [
+                        Card(
+                          elevation: 5,
+                          color: Colors.white,
+                          child: InterviewItem(
+                            title: title,
+                            createdAt: savedTime,
+                            onPressed: () {
+                              context
+                                  .push('/save', extra: [savedMessages, title]);
+                            },
+                            buttonEnable: false,
                           ),
-                        ],
-                      );
-                    }
+                        ),
+                      ],
+                    );
                   },
                 );
-              },
-            );
-          }
-        });
+              }
+            },
+          );
+        }
+      },
+    );
   }
 
   Future<Map<String, dynamic>> getMessageCount() async {

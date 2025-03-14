@@ -192,24 +192,44 @@ class ChatProvider with ChangeNotifier {
   //   return _saveMessages.elementAt(index).toList();
   // }
 
-  Future<Map<String, dynamic>> getSavedMessages(
-      String userId, int index) async {
+  // Future<Map<String, dynamic>> getSavedMessages(
+  //     String userId, int index) async {
+  //   final response = await Supabase.instance.client
+  //       .from('chatMessage')
+  //       .select('message, created_at')
+  //       .eq('author', userId)
+  //       .order('created_at', ascending: false); // 내림차순
+
+  //   // 날짜 변환
+  //   final time = response[index]['created_at'] as String;
+
+  //   // 메시지 처리
+  //   final jsonString = response[index]['message'] as String;
+  //   final List<dynamic> data = jsonDecode(jsonString);
+  //   final messages = data.map((json) => ChatMessage.fromMap(json)).toList();
+
+  //   return {'messages': messages, 'time': time};
+  // }
+
+  Future<List<Map<String, dynamic>>> getAllSavedMessages(
+      String userId, int messageCount) async {
     final response = await Supabase.instance.client
         .from('chatMessage')
         .select('message, created_at')
         .eq('author', userId)
-        .order('created_at', ascending: false);
+        .order('created_at', ascending: false); // 내림차순
 
-    // 날짜 변환
-    final time = response[index]['created_at'] as String;
+    // 데이터 처리
+    List<Map<String, dynamic>> allMessages = [];
+    for (int i = 0; i < messageCount; i++) {
+      final time = response[i]['created_at'] as String;
+      final jsonString = response[i]['message'] as String;
+      final List<dynamic> data = jsonDecode(jsonString);
+      final messages = data.map((json) => ChatMessage.fromMap(json)).toList();
 
-    // 메시지 처리
-
-    final jsonString = response[index]['message'] as String;
-    final List<dynamic> data = jsonDecode(jsonString);
-    final messages = data.map((json) => ChatMessage.fromMap(json)).toList();
-
-    return {'messages': messages, 'time': time};
+      allMessages.add({'messages': messages, 'time': time});
+    }
+    return allMessages;
   }
 
   void deleteSavedMessages(int index) {
